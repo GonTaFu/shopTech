@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
         <MyAppBar></MyAppBar>
         </header>
         <Box sx={{
-          marginTop: 10,
+          marginTop: 20,
         }}>
         {children}
         </Box>
