@@ -1,8 +1,8 @@
-const top100Films = [
+const kindOfPayment = [
     { label: 'VISA'},
     { label: 'MASTERCARD'},
     { label: 'PAYPAL'},
     { label: 'Thẻ nội địa'}
 ];
   
-export default top100Films;
+export default kindOfPayment;
