@@ -1,6 +1,5 @@
 
 import * as React from "react";
-
 import CssBaseline from "@mui/material/CssBaseline";
 import { Container } from "@mui/system";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -24,6 +23,7 @@ import {
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
+import Link from "next/link";
 
 const TableProductDetail = ({ product }) => {
   return (
