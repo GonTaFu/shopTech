@@ -1,4 +1,8 @@
+'use client';
+
 import Link from "next/link";
+import { AppBar, Toolbar, Typography, Container, Grid, Card, CardContent, Button } from "@mui/material";
+import PhoneIcon from "@mui/icons-material/Phone";
 
 export default function Showroom() {
   const showrooms = [
@@ -8,47 +12,58 @@ export default function Showroom() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <>
       {/* Header */}
-      <header className="bg-red-600 text-white p-4 shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <Link href="/">
-            <h1 className="text-2xl font-bold">GearVN</h1>
-          </Link>
-          <nav className="space-x-4">
-            <Link href="/" className="hover:underline">Trang chủ</Link>
-            <Link href="/profile" className="hover:underline">Hồ sơ</Link>
-          </nav>
-        </div>
-      </header>
+      <AppBar position="static" sx={{ backgroundColor: "#d32f2f" }}>
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: "bold" }}>
+            <Link href="/" style={{ textDecoration: "none", color: "white" }}>
+              GearVN
+            </Link>
+          </Typography>
+          <Button color="inherit" component={Link} href="/">Trang chủ</Button>
+          <Button color="inherit" component={Link} href="/profile">Hồ sơ</Button>
+        </Toolbar>
+      </AppBar>
 
       {/* Showroom Section */}
-      <main className="container mx-auto p-4 md:p-6">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">Hệ thống Showroom</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <Container sx={{ py: 6 }}>
+        <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+          Hệ thống Showroom
+        </Typography>
+        <Grid container spacing={4} justifyContent="center">
           {showrooms.map((showroom) => (
-            <div
-              key={showroom.id}
-              className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-            >
-              <h2 className="text-xl font-semibold text-gray-800">{showroom.city}</h2>
-              <p className="text-gray-600 mt-2">Địa chỉ: {showroom.address}</p>
-              <p className="text-gray-600 mt-1">Hotline: {showroom.phone}</p>
-              <a
-                href={`tel:${showroom.phone}`}
-                className="mt-4 inline-block bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors duration-300"
-              >
-                Gọi ngay
-              </a>
-            </div>
+            <Grid item key={showroom.id} xs={12} sm={6} md={4}>
+              <Card sx={{ p: 2, boxShadow: 3, transition: "0.3s", '&:hover': { boxShadow: 6 } }}>
+                <CardContent>
+                  <Typography variant="h6" fontWeight="bold" color="primary">
+                    {showroom.city}
+                  </Typography>
+                  <Typography variant="body1" color="textSecondary" mt={1}>
+                    Địa chỉ: {showroom.address}
+                  </Typography>
+                  <Typography variant="body1" color="textSecondary">
+                    Hotline: {showroom.phone}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    startIcon={<PhoneIcon />}
+                    href={`tel:${showroom.phone}`}
+                    sx={{ mt: 2, backgroundColor: "#d32f2f", '&:hover': { backgroundColor: "#b71c1c" } }}
+                  >
+                    Gọi ngay
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
           ))}
-        </div>
-      </main>
+        </Grid>
+      </Container>
 
       {/* Footer */}
-      <footer className="bg-blue-500 text-white p-4 text-center">
-        <p className="text-lg md:text-xl font-semibold">© 2025 GearVN. All rights reserved.</p>
+      <footer style={{ backgroundColor: "#1976d2", color: "white", padding: "16px", textAlign: "center" }}>
+        <Typography variant="body1">© 2025 GearVN. All rights reserved.</Typography>
       </footer>
-    </div>
+    </>
   );
 }
