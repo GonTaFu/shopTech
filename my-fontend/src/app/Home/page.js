@@ -2,7 +2,7 @@
 import Image from "next/image";
 import HomePage from "./Home"
 
-export default function payPage() {
+export default function homePage() {
     return (
         <div>
             <title>Home Page</title>
