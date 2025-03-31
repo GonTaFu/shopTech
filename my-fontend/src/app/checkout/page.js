@@ -1,10 +1,11 @@
 'use client';
 import Image from "next/image";
 import PayBill from "./paybill.js";
+import { Container } from "@mui/material";
 
 export default function payPage() {
     return (
-        <div>
+        <Container maxWidth="lg" sx={{ marginBottom: 50 }}>
             <h1>Thanh toán</h1>
             <PayBill></PayBill>
 
@@ -16,6 +17,6 @@ export default function payPage() {
                 display: flex;
             },
         `}</style>
-        </div>
+        </Container>
     );
 }
