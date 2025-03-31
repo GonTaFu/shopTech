@@ -5,7 +5,7 @@ import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
 import PaymentIcon from "@mui/icons-material/Payment";
 import CancelIcon from "@mui/icons-material/Cancel";
-import payment from "./payment";
+import payment from "../components/payment";
 
 const PayPage = () => {
   return (
