@@ -1,6 +1,6 @@
 'use client';
 import Image from "next/image";
-import PageProductList  from "../../components/productlist";
+import PageProductList  from "../../components/ProductList";
 
 export default function ProductList() {
     return (
