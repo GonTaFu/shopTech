@@ -9,8 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "react": "^19.0.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^6.4.9",
+    "@mui/styled-engine-sc": "^6.4.6",
+    "icons-material": "^0.0.1-security",
+    "next": "^15.2.4",
+    "react": "^19.1.0",
     "react-dom": "^19.0.0",
-    "next": "15.2.1"
+    "react-hook-form": "^7.55.0",
+    "router": "^2.2.0",
+    "styled-components": "^6.1.15"
   }
 }
