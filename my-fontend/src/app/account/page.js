@@ -6,7 +6,7 @@ import { Container } from "@mui/material"
 
 export default function AccountPage() {
   return (
-    <Container maxWidth="lg" sx={{ margin: 100 }}>
+    <Container>
        <LoginPage></LoginPage>
     </Container>
   )
