@@ -7,15 +7,6 @@ export default function payPage() {
     return (
         <Container maxWidth="lg" sx={{ marginBottom: 50 }}>
             <PayBill></PayBill>
-
-
-            <style jsx>{`
-            h1 {
-                align-items: center;
-                justify-content: center;
-                display: flex;
-            },
-        `}</style>
         </Container>
     );
 }
