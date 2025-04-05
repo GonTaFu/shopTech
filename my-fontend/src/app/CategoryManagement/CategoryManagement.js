@@ -1,7 +1,7 @@
-'use client';
-
-import React from 'react'; // ✅ Bắt buộc để tránh lỗi React is not defined
-import { useState } from 'react';
+"use client";
+//Chinh sua
+import React from "react"; // ✅ Bắt buộc để tránh lỗi React is not defined
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -21,13 +21,19 @@ import {
   DialogContent,
   DialogActions,
   Collapse,
-} from '@mui/material';
-import { styled } from '@mui/system';
-import { Edit, Trash2, Plus, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
+} from "@mui/material";
+import { styled } from "@mui/system";
+import {
+  Edit,
+  Trash2,
+  Plus,
+  Save,
+  X,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 
 // ... (toàn bộ phần code xử lý state và render như bạn có ở file trước)
-
-
 
 // Styled components omitted here for brevity (same as your previous setup)
 // If you want them back, let me know!
@@ -36,32 +42,36 @@ export default function CategoryManagement() {
   const [categories, setCategories] = useState([
     {
       id: 1,
-      name: 'Laptop',
-      subcategories: ['ASUS', 'Dell', 'HP'],
+      name: "Laptop",
+      subcategories: ["ASUS", "Dell", "HP"],
     },
     {
       id: 2,
-      name: 'Headphones',
-      subcategories: ['Sony', 'JBL'],
+      name: "Headphones",
+      subcategories: ["Sony", "JBL"],
     },
     {
       id: 3,
-      name: 'iPad',
-      subcategories: ['Air', 'Pro', 'Mini'],
+      name: "iPad",
+      subcategories: ["Air", "Pro", "Mini"],
     },
   ]);
 
   const [openDialog, setOpenDialog] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSub, setIsSub] = useState(false);
-  const [currentCategory, setCurrentCategory] = useState({ id: null, name: '', subcategories: [] });
+  const [currentCategory, setCurrentCategory] = useState({
+    id: null,
+    name: "",
+    subcategories: [],
+  });
   const [currentParentId, setCurrentParentId] = useState(null);
   const [expandedCategory, setExpandedCategory] = useState(null);
 
   const handleOpenAddDialog = () => {
     setIsEditing(false);
     setIsSub(false);
-    setCurrentCategory({ id: null, name: '', subcategories: [] });
+    setCurrentCategory({ id: null, name: "", subcategories: [] });
     setOpenDialog(true);
   };
 
@@ -75,7 +85,7 @@ export default function CategoryManagement() {
   const handleOpenAddSubcategory = (parentId) => {
     setIsSub(true);
     setCurrentParentId(parentId);
-    setCurrentCategory({ name: '' });
+    setCurrentCategory({ name: "" });
     setOpenDialog(true);
   };
 
@@ -98,7 +108,7 @@ export default function CategoryManagement() {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    setCurrentCategory({ id: null, name: '', subcategories: [] });
+    setCurrentCategory({ id: null, name: "", subcategories: [] });
   };
 
   const handleInputChange = (e) => {
@@ -113,14 +123,19 @@ export default function CategoryManagement() {
       setCategories((prev) =>
         prev.map((cat) =>
           cat.id === currentParentId
-            ? { ...cat, subcategories: [...cat.subcategories, currentCategory.name] }
+            ? {
+                ...cat,
+                subcategories: [...cat.subcategories, currentCategory.name],
+              }
             : cat
         )
       );
     } else if (isEditing) {
       setCategories((prev) =>
         prev.map((cat) =>
-          cat.id === currentCategory.id ? { ...cat, name: currentCategory.name } : cat
+          cat.id === currentCategory.id
+            ? { ...cat, name: currentCategory.name }
+            : cat
         )
       );
     } else {
@@ -140,11 +155,20 @@ export default function CategoryManagement() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={3}
+      >
         <Typography variant="h4" fontWeight="bold">
           Quản lý loại sản phẩm
         </Typography>
-        <Button variant="contained" startIcon={<Plus size={20} />} onClick={handleOpenAddDialog}>
+        <Button
+          variant="contained"
+          startIcon={<Plus size={20} />}
+          onClick={handleOpenAddDialog}
+        >
           Thêm loại
         </Button>
       </Box>
@@ -179,7 +203,9 @@ export default function CategoryManagement() {
                     <IconButton onClick={() => handleOpenEditDialog(category)}>
                       <Edit size={18} />
                     </IconButton>
-                    <IconButton onClick={() => handleOpenAddSubcategory(category.id)}>
+                    <IconButton
+                      onClick={() => handleOpenAddSubcategory(category.id)}
+                    >
                       <Plus size={18} />
                     </IconButton>
                     <IconButton onClick={() => handleDelete(category.id)}>
@@ -201,7 +227,9 @@ export default function CategoryManagement() {
                               <li key={i}>
                                 {sub}
                                 <IconButton
-                                  onClick={() => handleDeleteSub(category.id, i)}
+                                  onClick={() =>
+                                    handleDeleteSub(category.id, i)
+                                  }
                                   size="small"
                                   sx={{ ml: 1 }}
                                 >
@@ -222,9 +250,24 @@ export default function CategoryManagement() {
       </TableContainer>
 
       {/* Dialog for Add/Edit */}
-      <Dialog open={openDialog} onClose={handleCloseDialog} fullWidth maxWidth="sm">
-        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          {isSub ? 'Thêm danh mục con' : isEditing ? 'Chỉnh sửa loại' : 'Thêm loại mới'}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          {isSub
+            ? "Thêm danh mục con"
+            : isEditing
+            ? "Chỉnh sửa loại"
+            : "Thêm loại mới"}
           <IconButton onClick={handleCloseDialog}>
             <X />
           </IconButton>
@@ -234,7 +277,7 @@ export default function CategoryManagement() {
             <TextField
               autoFocus
               margin="dense"
-              label={isSub ? 'Tên danh mục con' : 'Tên loại sản phẩm'}
+              label={isSub ? "Tên danh mục con" : "Tên loại sản phẩm"}
               type="text"
               fullWidth
               name="name"
@@ -245,10 +288,18 @@ export default function CategoryManagement() {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={handleCloseDialog} startIcon={<X />}>
+          <Button
+            variant="outlined"
+            onClick={handleCloseDialog}
+            startIcon={<X />}
+          >
             Hủy
           </Button>
-          <Button variant="contained" onClick={handleSubmit} startIcon={<Save />}>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            startIcon={<Save />}
+          >
             Lưu
           </Button>
         </DialogActions>
