@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import { useRouter } from 'next/navigation';
 
+
 export default function RegisterPage() {
   const router = useRouter();
 
