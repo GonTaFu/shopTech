@@ -3,7 +3,7 @@ import {
   Container, Pagination, Typography, Card, CardContent, CardActions, Button,
   Divider, Box
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import PaymentIcon from "@mui/icons-material/Payment";
 import PersonIcon from "@mui/icons-material/Person";
