@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import BrandManagement from "../../components/BrandManage";
+import BrandManagement from "../../../components/BrandManage";
 import { Container } from "@mui/material"
 
 export default function Home() {

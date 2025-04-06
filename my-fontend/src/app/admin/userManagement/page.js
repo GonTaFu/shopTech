@@ -1,9 +1,9 @@
 'use client';
 import Image from "next/image";
-import AdminUserManagement  from "../../components/UserManagement";
+import AdminUserManagement  from "../../../components/UserManagement";
 import { Container } from "@mui/material";
 
-export default function ProductList() {
+export default function UserManagementPage() {
     return (
         <Container maxWidth="lg" sx={{ marginBottom:50 }}>
             <AdminUserManagement></AdminUserManagement>

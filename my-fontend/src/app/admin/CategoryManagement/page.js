@@ -1,6 +1,6 @@
 'use client';
 import Head from "next/head";
-import CategoryManagement from "../../components/CategoryManagement";
+import CategoryManagement from "../../../components/CategoryManagement";
 
 export default function CategoryPage() {
   return (
