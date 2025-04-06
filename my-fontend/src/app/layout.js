@@ -18,7 +18,7 @@ export const metadata = {
 
 import MyAppBar from "../components/MyAppBar";
 import MyFooter from "../components/MyFooter";
-import { Box, margin, padding } from "@mui/system";
+import { Box, margin, padding, width } from "@mui/system";
 
 export default function RootLayout({ children }) {
   return (
