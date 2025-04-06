@@ -106,7 +106,14 @@ export default function Profile() {
     email: "nguyenvana@example.com",
     phone: "0901234567",
     address: "123 Đường Láng, Đống Đa, Hà Nội",
-  });
+  }
+  // {
+  //   name: "Nguyễn Thị B",
+  //   email: "nguyenthib@example.com",
+  //   phone: "0123456789",
+  //   address: "456 Đường Láng, Đống Đa, Hà Nội",
+  // }
+  );
 
   // State for editing mode
   const [isEditing, setIsEditing] = useState(false);
