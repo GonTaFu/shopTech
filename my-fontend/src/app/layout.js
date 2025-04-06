@@ -18,19 +18,19 @@ export const metadata = {
 
 import MyAppBar from "../components/MyAppBar";
 import MyFooter from "../components/MyFooter";
-import { Box, margin, padding } from "@mui/system";
+import { Box, margin, padding, width } from "@mui/system";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <header>
-        <MyAppBar></MyAppBar>
+          <MyAppBar></MyAppBar>
         </header>
         <Box sx={{
           marginTop: 20,
         }}>
-        {children}
+          {children}
         </Box>
         <footer sx={{
           margin: 0,
@@ -42,3 +42,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
