@@ -285,6 +285,5 @@ export default function Profile() {
         )}
       </StyledBox>
     </StyledContainer>
->>>>>>> 280f6bde32f8f1f6eb1c35971d14da59213cebf9
   );
 }
