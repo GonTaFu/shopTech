@@ -6,7 +6,8 @@ var categoriesController = require('../controllers/CategoriesController')
 var brandsController = require('../controllers/BrandsControllers')
 var accountsController = require('../controllers/AccountsController')
 var ordersController = require('../controllers/OrdersController')
-var ordersDetailController = require('../controllers/OrdersDetailController')
+var ordersDetailController = require('../controllers/OrdersDetailController');
+
 
 // // Products
 // // Add - Create
@@ -27,6 +28,13 @@ var ordersDetailController = require('../controllers/OrdersDetailController')
 // router.delete("/categories/delete/:id", categoriesController.DeleteCategory);
 // // Get - Read
 // router.get("/categories", categoriesController.GetCategories);
+
+// Account
+router.post("/accounts/add", accountsController.addAccount);
+router.put("/accounts/update/:id", accountsController.updateAccount);
+router.delete("/accounts/delete/:id", accountsController.deleteAccount);
+router.get("/accounts", accountsController.getAll);
+router.get("/accounts/:id", accountsController.getById);
 
 
 // 
