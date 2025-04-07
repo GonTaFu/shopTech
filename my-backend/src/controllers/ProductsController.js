@@ -9,7 +9,7 @@ class ProductsController {
   async getAll(req, res) {
     try {
       const products = await Products.find()
-        .populate("category")
+        .populate("categories_id")
         .populate("brand");
 
       res.status(200).json(products);
