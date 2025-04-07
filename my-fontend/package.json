@@ -20,5 +20,9 @@
     "react-hook-form": "^7.55.0",
     "router": "^2.2.0",
     "styled-components": "^6.1.15"
+  },
+  "devDependencies": {
+    "@types/node": "22.14.0",
+    "typescript": "5.8.3"
   }
 }
