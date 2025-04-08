@@ -22,12 +22,8 @@ import {
 } from "@mui/material";
 
 import Box from "@mui/material/Box";
-<<<<<<< HEAD
 import Grid from "@mui/material/Grid";
-=======
-import Grid from "@mui/material/Grid2";
 import Link from "next/link";
->>>>>>> fbe692924e3ee093789d92a74181759adda250f8
 
 const TableProductDetail = ({ product }) => {
   return (
