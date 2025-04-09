@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Box,
   Button,
@@ -24,13 +24,13 @@ import {
 import { styled } from "@mui/system";
 import { Edit, Trash2, Plus, Save, X } from "lucide-react";
 
-// Styled Components
+// Styled Components (unchanged, included for completeness)
 const StyledContainer = styled(Container)(({ theme }) => ({
   paddingTop: theme.spacing(4),
   paddingBottom: theme.spacing(4),
-  background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)", // Softer blue gradient
+  background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
   borderRadius: "16px",
-  boxShadow: "0 6px 24px rgba(0, 0, 0, 0.1)", // Softer, larger shadow
+  boxShadow: "0 6px 24px rgba(0, 0, 0, 0.1)",
   marginTop: theme.spacing(3),
   marginBottom: theme.spacing(3),
   position: "relative",
@@ -43,31 +43,31 @@ const StyledContainer = styled(Container)(({ theme }) => ({
     width: "100%",
     height: "100%",
     background:
-      "radial-gradient(circle at top left, rgba(255, 255, 255, 0.3), transparent)", // Subtle overlay gradient
+      "radial-gradient(circle at top left, rgba(255, 255, 255, 0.3), transparent)",
     pointerEvents: "none",
   },
 }));
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
-  background: "linear-gradient(145deg, #ffffff, #f5f5f5)", // Subtle gradient for table
+  background: "linear-gradient(145deg, #ffffff, #f5f5f5)",
   borderRadius: "12px",
   boxShadow: "0 4px 16px rgba(0, 0, 0, 0.08)",
-  border: "1px solid rgba(0, 0, 0, 0.05)", // Light border for definition
+  border: "1px solid rgba(0, 0, 0, 0.05)",
 }));
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   fontWeight: "600",
-  color: "#0d47a1", // Darker blue for headers
+  color: "#0d47a1",
   borderBottom: "1px solid rgba(0, 0, 0, 0.05)",
   padding: theme.spacing(1.5),
-  backgroundColor: "rgba(255, 255, 255, 0.9)", // Slightly opaque white for headers
+  backgroundColor: "rgba(255, 255, 255, 0.9)",
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   transition: "background 0.3s ease-in-out, transform 0.2s ease-in-out",
   "&:hover": {
-    backgroundColor: "rgba(33, 150, 243, 0.1)", // Light blue hover effect
-    transform: "translateY(-2px)", // Slight lift on hover
+    backgroundColor: "rgba(33, 150, 243, 0.1)",
+    transform: "translateY(-2px)",
   },
 }));
 
@@ -79,12 +79,12 @@ const StyledButton = styled(Button)(({ theme }) => ({
   textTransform: "none",
   transition: "background 0.3s ease-in-out, transform 0.2s ease-in-out",
   "&:hover": {
-    transform: "scale(1.03)", // Slight scale on hover
+    transform: "scale(1.03)",
   },
 }));
 
 const AddButton = styled(StyledButton)(({ theme }) => ({
-  background: "linear-gradient(90deg, #0288d1 30%, #4fc3f7 90%)", // Bright blue gradient
+  background: "linear-gradient(90deg, #0288d1 30%, #4fc3f7 90%)",
   color: "#fff",
   boxShadow: "0 2px 8px rgba(2, 136, 209, 0.3)",
   "&:hover": {
@@ -93,7 +93,7 @@ const AddButton = styled(StyledButton)(({ theme }) => ({
 }));
 
 const SaveButton = styled(StyledButton)(({ theme }) => ({
-  background: "linear-gradient(90deg, #388e3c 30%, #66bb6a 90%)", // Green gradient for save
+  background: "linear-gradient(90deg, #388e3c 30%, #66bb6a 90%)",
   color: "#fff",
   boxShadow: "0 2px 8px rgba(56, 142, 60, 0.3)",
   "&:hover": {
@@ -117,7 +117,7 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
   transition: "color 0.3s ease-in-out, transform 0.2s ease-in-out",
   "&:hover": {
     color: "#0288d1",
-    transform: "scale(1.1)", // Slight scale on hover
+    transform: "scale(1.1)",
   },
 }));
 
@@ -172,26 +172,35 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 export default function CategoryManagement() {
-  const [categories, setCategories] = useState([
-    { id: 1, name: "Laptop" },
-    { id: 2, name: "Headphones" },
-    { id: 3, name: "iPad" },
-    { id: 4, name: "Mouse" },
-    { id: 5, name: "Keyboard" },
-    { id: 6, name: "Monitor" },
-    { id: 7, name: "Smartphone" },
-  ]);
-
+  const [categories, setCategories] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentCategory, setCurrentCategory] = useState({
-    id: null,
+    _id: null,
     name: "",
   });
 
+  const API_URL = "http://localhost:3000/api"; // Connects to back-end
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/categories`);
+        if (response.data.success) {
+          setCategories(response.data.data);
+        } else {
+          console.error("Failed to fetch categories:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   const handleOpenAddDialog = () => {
     setIsEditing(false);
-    setCurrentCategory({ id: null, name: "" });
+    setCurrentCategory({ _id: null, name: "" });
     setOpenDialog(true);
   };
 
@@ -201,13 +210,24 @@ export default function CategoryManagement() {
     setOpenDialog(true);
   };
 
-  const handleDelete = (id) => {
-    setCategories((prev) => prev.filter((cat) => cat.id !== id));
+  const handleDelete = async (_id) => {
+    try {
+      const response = await axios.delete(`${API_URL}/categories/${_id}`);
+      if (response.data.success) {
+        setCategories((prev) => prev.filter((cat) => cat._id !== _id));
+      } else {
+        console.error("Failed to delete category:", response.data.message);
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting category:", error);
+      alert("An error occurred while deleting the category.");
+    }
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    setCurrentCategory({ id: null, name: "" });
+    setCurrentCategory({ _id: null, name: "" });
   };
 
   const handleInputChange = (e) => {
@@ -215,24 +235,42 @@ export default function CategoryManagement() {
     setCurrentCategory((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isEditing) {
-      setCategories((prev) =>
-        prev.map((cat) =>
-          cat.id === currentCategory.id
-            ? { ...cat, name: currentCategory.name }
-            : cat
-        )
-      );
-    } else {
-      const newCategory = {
-        id: categories.length + 1,
-        name: currentCategory.name,
-      };
-      setCategories((prev) => [...prev, newCategory]);
+    try {
+      if (isEditing) {
+        const response = await axios.put(
+          `${API_URL}/categories/${currentCategory._id}`,
+          { name: currentCategory.name }
+        );
+        if (response.data.success) {
+          setCategories((prev) =>
+            prev.map((cat) =>
+              cat._id === currentCategory._id ? response.data.data : cat
+            )
+          );
+        } else {
+          console.error("Failed to update category:", response.data.message);
+          alert(response.data.message);
+          return;
+        }
+      } else {
+        const response = await axios.post(`${API_URL}/categories`, {
+          name: currentCategory.name,
+        });
+        if (response.data.success) {
+          setCategories((prev) => [...prev, response.data.data]);
+        } else {
+          console.error("Failed to create category:", response.data.message);
+          alert(response.data.message);
+          return;
+        }
+      }
+      handleCloseDialog();
+    } catch (error) {
+      console.error("Error saving category:", error);
+      alert("An error occurred while saving the category.");
     }
-    handleCloseDialog();
   };
 
   return (
@@ -289,7 +327,7 @@ export default function CategoryManagement() {
           </TableHead>
           <TableBody>
             {categories.map((category, index) => (
-              <StyledTableRow key={category.id}>
+              <StyledTableRow key={category._id}>
                 <TableCell sx={{ fontWeight: "500", color: "#424242" }}>
                   {index + 1}
                 </TableCell>
@@ -311,7 +349,7 @@ export default function CategoryManagement() {
                   >
                     <Edit size={18} color="#0288d1" />
                   </StyledIconButton>
-                  <DeleteIconButton onClick={() => handleDelete(category.id)}>
+                  <DeleteIconButton onClick={() => handleDelete(category._id)}>
                     <Trash2 size={18} color="#ef5350" />
                   </DeleteIconButton>
                 </TableCell>
