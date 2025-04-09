@@ -44,6 +44,7 @@ export default function MyAppBar() {
         bgcolor: "transparent",
         backgroundImage: "none",
         mt: "calc(var(--template-frame-height, 0px) + 28px)",
+        mt: 8
         // margin: 0,
       }}
     >
