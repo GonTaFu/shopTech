@@ -1,4 +1,6 @@
+"use client"
 
+// src/components/ProductDetail.js
 import * as React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Container } from "@mui/system";
