@@ -22,7 +22,7 @@ class ProductsController {
   async getById(req, res) {
     try {
       const product = await Products.findById(req.params.id)
-        .populate("category")
+        .populate("categories_id")
         .populate("brand");
 
       if (!product)

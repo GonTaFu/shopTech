@@ -1,10 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
+var cors = require('cors')
 const router = require('./routes')
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 // db
 const uri = "mongodb+srv://pikachu123450vn:phuc1234567890@cluster0.4lvmo.mongodb.net/shoppingonline";
@@ -18,6 +18,9 @@ var db = mongoose.connect(uri).then(() => console.log("Kết nối thành công 
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cors());
+
 // apis
 app.get('/hello', (req, res) => {
     res.json({ message: 'Hello from server!' });

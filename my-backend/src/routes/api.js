@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var productssController = require('../controllers/ProductsController')
+var productsController = require('../controllers/ProductsController')
 var categoriesController = require('../controllers/CategoriesController')
 var brandsController = require('../controllers/BrandsControllers')
 var accountsController = require('../controllers/AccountsController')
@@ -10,13 +10,15 @@ var ordersDetailController = require('../controllers/OrdersDetailController')
 
 // // Products
 // // Add - Create
-// router.post("/products/add", productssController.AddProducts);
+// router.post("/products/add", productsController.AddProducts);
 // // Update
-// router.put("/products/update/:id", productssController.UpdateProducts);
+// router.put("/products/update/:id", productsController.UpdateProducts);
 // // Delete
-// router.delete("/products/delete/:id", productssController.DeleteProducts);
+// router.delete("/products/delete/:id", productsController.DeleteProducts);
 // // Get - Read
-// router.get("/products", productssController.GetProducts);
+// router.get("/products", productsController.GetProducts);
+
+router.get('/products/get/:id', productsController.getById);
 
 // // Categories
 // // Add - Create

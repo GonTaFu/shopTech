@@ -1,28 +1,39 @@
-"use client"
-import Image from "next/image";
-
+"use client";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import ProductDetail from "../../../components/ProductDetail";
+import HandleLoading from "../../../components/HandleLoading";
+// import ServerError from "../../../components/ServerError"; // thêm dòng này
 
-const product = {
-  id:"WH1000XM4",
-  name: "Premium Wireless Headphones",
-  description: "Experience premium sound quality and industry-leading noise cancellation with these wireless headphones. Perfect for music lovers and frequent travelers.",
-  price: "349.99",
-  rate: 4,
-  images: [
-    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxfHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080",
-    "https://images.unsplash.com/photo-1528148343865-51218c4a13e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080",
-  ],
-  brand: "Logitech",
-  status: "New",
-  color: "Black",
-  warranty: "24 Months",
-}
+export default function Page() {
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [error, setError] = useState(false); // thêm state kiểm tra lỗi
 
-export default function Home() {
-  return (
-    <div>
-      <ProductDetail product={product}></ProductDetail>
-    </div>
-  );
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`http://localhost:4000/api/products/get/${id}`);
+        if (!res.ok) throw new Error("Fetch failed");
+        const data = await res.json();
+        setProduct(data);
+      } catch (err) {
+        console.error("Lỗi khi fetch sản phẩm:", err);
+        setError(true); // nếu có lỗi thì bật error
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  // Hiển thị lỗi server
+  // if (error) return <ServerError />;
+
+  // Hiển thị loading trong khi chờ
+  if (!product) return <center><HandleLoading></HandleLoading></center>;
+
+  // Nếu dữ liệu hợp lệ thì hiển thị chi tiết
+  return <ProductDetail product={product} />;
 }

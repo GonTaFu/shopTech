@@ -1,5 +1,4 @@
 "use client"
-
 // src/components/ProductDetail.js
 import * as React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -28,11 +27,17 @@ import Grid from "@mui/material/Grid";
 import Link from "next/link";
 
 const TableProductDetail = ({ product }) => {
+  const displayData = {
+    Name: product.name,
+    Price: product.price,
+    Brand: product.brand,
+    Category: product.categories_id,
+  };
   return (
     <TableContainer>
       <Table aria-label="simple table">
         <TableBody>
-          {Object.entries(product).map(([key, value]) => (
+          {Object.entries(displayData).map(([key, value]) => (
             <TableRow key={key}>
               <TableCell sx={{ fontWeight: "bold" }}>
                 {key.charAt(0).toUpperCase() + key.slice(1)}
@@ -52,6 +57,12 @@ const ProductDetail = ({ product }) => {
   const data_table = { ...product };
   delete data_table.images;
   delete data_table.description;
+  delete data_table.show;
+  delete data_table.__v;
+
+  data_table.brand = data_table.brand?.name || "";
+  data_table.categories_id = data_table.categories_id?.name || "";
+
   return (
     <>
       <Container sx={{ py: 4 }} maxWidth="md">
@@ -77,24 +88,24 @@ const ProductDetail = ({ product }) => {
                   {product.name}
                 </Typography>
                 <Typography gutterBottom variant="h8" component="div">
-                  SKU: {product.id}
+                  SKU: {product._id}
                 </Typography>
-                <Rating name="read-only" value={product.rate} readOnly />
+                {/* <Rating name="read-only" value={product.rate} readOnly /> */}
                 <Typography gutterBottom variant="h8" component="div">
-                  $ {product.price}
+                {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(product.price)}
                 </Typography>
                 <Typography variant="h8" component="div">
-                  Brand: {product.brand}
+                  Thương hiệu: {product.brand.name}
                 </Typography>
-                <Typography variant="h8" component="div">
+                {/* <Typography variant="h8" component="div">
                   Status: {product.status}
-                </Typography>
-                <Typography variant="h8" component="div">
+                </Typography> */}
+                {/* <Typography variant="h8" component="div">
                   Warranty: {product.warranty}
-                </Typography>
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                </Typography> */}
+                {/* <Typography variant="body2" sx={{ color: "text.secondary" }}>
                   {product.description}
-                </Typography>
+                </Typography> */}
               </CardContent>
               <CardActions bgcolor="text.disabled">
                 <Button
@@ -114,32 +125,31 @@ const ProductDetail = ({ product }) => {
                   fullWidth
                   startIcon={<FavoriteBorderIcon />}
                 >
-                  Add to whish list
+                  Add to cart
                 </Button>
               </CardActions>
             </Grid>
           </Grid>
         </Box>
       </Container>
-      <Container sx={{ py: 4}} maxWidth="md">
-        {/* <TableProductDetail product={data_table}></TableProductDetail> */}
+      <Container sx={{ py: 4 }} maxWidth="md">
         <Grid
           container
           spacing={{ xs: 1, md: 1 }}
           columns={{ xs: 1, sm: 4, md: 8 }}
         >
           <Grid size={{ xs: 6, md: 5 }}>
-          <Typography gutterBottom variant="h5" component="div">
-                  Mô tả sản phẩm
-          </Typography>
-          <Typography gutterBottom variant="h7" component="div">
-          {product.description}
-          </Typography>
+            <Typography gutterBottom variant="h5" component="div">
+              Mô tả sản phẩm
+            </Typography>
+            <Typography gutterBottom variant="h7" component="div">
+              {product.description}
+            </Typography>
           </Grid>
           <Grid size={{ xs: 6, md: 3 }}>
-          <Typography gutterBottom variant="h5" component="div">
-                  Thông tin chi tiết
-          </Typography>
+            <Typography gutterBottom variant="h5" component="div">
+              Thông tin chi tiết
+            </Typography>
             <TableProductDetail product={data_table}></TableProductDetail>
           </Grid>
         </Grid>
