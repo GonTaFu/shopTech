@@ -14,15 +14,12 @@
     "@mui/material": "^6.4.9",
     "@mui/styled-engine-sc": "^6.4.6",
     "icons-material": "^0.0.1-security",
+    "my-app": "file:",
     "next": "^15.2.4",
     "react": "^19.1.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.55.0",
     "router": "^2.2.0",
     "styled-components": "^6.1.15"
-  },
-  "devDependencies": {
-    "@types/node": "22.14.0",
-    "typescript": "5.8.3"
   }
 }
