@@ -8,17 +8,18 @@ var accountsController = require('../controllers/AccountsController')
 var ordersController = require('../controllers/OrdersController')
 var ordersDetailController = require('../controllers/OrdersDetailController')
 
-// // Products
-// // Add - Create
-// router.post("/products/add", productsController.AddProducts);
-// // Update
-// router.put("/products/update/:id", productsController.UpdateProducts);
-// // Delete
-// router.delete("/products/delete/:id", productsController.DeleteProducts);
-// // Get - Read
-// router.get("/products", productsController.GetProducts);
-
+// Products
+// Add - Create
+router.post("/products/add", productsController.addProduct);
+// Update
+router.put("/products/update/:id", productsController.updateProduct);
+// Delete
+router.delete("/products/delete/:id", productsController.deleteProduct);
+// Get - Read
 router.get('/products/get/:id', productsController.getById);
+router.get("/products", productsController.getAll);
+
+
 
 // // Categories
 // // Add - Create
