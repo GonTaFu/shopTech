@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const router = require('./routes')
 
@@ -16,6 +17,7 @@ var db = mongoose.connect(uri).then(() => console.log("Kết nối thành công 
 // app.use(bodyParser.json({ limit: '10mb' }));
 // app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

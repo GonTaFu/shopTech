@@ -10,6 +10,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 
+// Sử dụng biến môi trường cho API backend
+const API_BASE_URL = "http://localhost:3000";
+
 export default function AdminUserManagement() {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
@@ -18,7 +21,7 @@ export default function AdminUserManagement() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch("http://localhost:3001/api/accounts"); // ✅ sửa port
+      const res = await fetch(`${API_BASE_URL}/api/accounts`);
       const data = await res.json();
       setUsers(data);
     } catch (error) {
@@ -49,8 +52,8 @@ export default function AdminUserManagement() {
     try {
       const method = editingUser ? "PUT" : "POST";
       const endpoint = editingUser
-        ? `http://localhost:3001/api/accounts/update/${editingUser._id}` // ✅ sửa port
-        : "http://localhost:3001/api/accounts/add";
+        ? `${API_BASE_URL}/api/accounts/update/${editingUser._id}`
+        : `${API_BASE_URL}/api/accounts/add`;
 
       const res = await fetch(endpoint, {
         method,
@@ -70,7 +73,7 @@ export default function AdminUserManagement() {
   const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc muốn xóa người dùng này?")) return;
     try {
-      await fetch(`http://localhost:3001/api/accounts/delete/${id}`, { method: "DELETE" }); // ✅ sửa port
+      await fetch(`${API_BASE_URL}/api/accounts/delete/${id}`, { method: "DELETE" });
       fetchUsers();
     } catch (err) {
       console.error("Lỗi khi xóa:", err);
