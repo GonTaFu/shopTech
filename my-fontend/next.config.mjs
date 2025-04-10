@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     experimental: {
-      serverActions: true, // Nếu cần dùng Server Actions
+      serverActions: {}, // Nếu cần dùng Server Actions
     },
   };
   
