@@ -11,15 +11,14 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/material": "^6.4.9",
-    "@mui/styled-engine-sc": "^6.4.6",
-    "icons-material": "^0.0.1-security",
-    "next": "^15.2.4",
-    "react": "^19.1.0",
-    "react-dom": "^19.0.0",
-    "react-hook-form": "^7.55.0",
-    "router": "^2.2.0",
-    "styled-components": "^6.1.15"
+    "@mui/icons-material": "^7.0.1",
+    "@mui/joy": "^5.0.0-beta.52",
+    "@mui/material": "^7.0.1",
+    "axios": "^1.8.4",
+    "lucide-react": "^0.486.0",
+    "next": "^15.2.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@types/node": "22.14.0",
