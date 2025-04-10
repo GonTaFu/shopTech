@@ -20,7 +20,7 @@ mongoose
   });
 
 // Middleware
-app.use(cors()); // Enables CORS for front-end (e.g., http://localhost:3001)
+app.use(cors({ origin: "http://localhost:3001" }));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
@@ -29,7 +29,7 @@ app.get("/hello", (req, res) => {
   res.json({ message: "Hello from server!" });
 });
 
-app.use("/api", router); // Mounts routes at /api (e.g., /api/categories)
+app.use("/api", router); // Mounts routes at /api
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

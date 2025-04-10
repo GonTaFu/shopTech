@@ -9,26 +9,21 @@ var ordersController = require("../controllers/OrdersController");
 var ordersDetailController = require("../controllers/OrdersDetailController");
 
 // Categories
-// Add - Create
-router.post("/categories", categoriesController.createCategory); // Changed from "/categories/add" and "AddCatagory"
-// Update
-router.put("/categories/:id", categoriesController.updateCategory); // Matches "updateCategory"
-// Delete
-router.delete("/categories/:id", categoriesController.deleteCategory); // Matches "deleteCategory"
-// Get - Read
-router.get("/categories", categoriesController.getAllCategories); // Changed from "GetCategories"
-router.get("/categories/:id", categoriesController.getCategoryById); // Added to match "getCategoryById"
+router.post("/categories", categoriesController.createCategory);
+router.put("/categories/:id", categoriesController.updateCategory);
+router.delete("/categories/:id", categoriesController.deleteCategory);
+router.get("/categories", categoriesController.getAllCategories);
+router.get("/categories/:id", categoriesController.getCategoryById);
+
+// Orders
+router.get("/orders", ordersController.getAllOrders);
+router.post("/orders", ordersController.createOrder);
+router.put("/orders/:id", ordersController.updateOrder);
+router.delete("/orders/:id", ordersController.deleteOrder);
 
 // Keep the root route
 router.get("/", (req, res) => {
   return res.json({ message: "This is API" });
 });
-
-// Uncomment and update product routes if needed
-// Products
-// router.post("/products/add", productssController.AddProducts);
-// router.put("/products/update/:id", productssController.UpdateProducts);
-// router.delete("/products/delete/:id", productssController.DeleteProducts);
-// router.get("/products", productssController.GetProducts);
 
 module.exports = router;
