@@ -1,4 +1,3 @@
-// components/userManagement.js
 "use client";
 
 import { useEffect, useState } from "react";
@@ -10,14 +9,19 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 
-// Sử dụng biến môi trường cho API backend
 const API_BASE_URL = "http://localhost:3000";
 
 export default function AdminUserManagement() {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
-  const [formData, setFormData] = useState({ name: "", emailAddress: "", roleId: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    emailAddress: "",
+    roleId: "",
+    password: "",
+    phoneNumber: ""
+  });
 
   const fetchUsers = async () => {
     try {
@@ -35,7 +39,13 @@ export default function AdminUserManagement() {
 
   const handleOpen = (user = null) => {
     setEditingUser(user);
-    setFormData(user || { name: "", emailAddress: "", roleId: "" });
+    setFormData(user || {
+      name: "",
+      emailAddress: "",
+      roleId: "",
+      password: "",
+      phoneNumber: ""
+    });
     setOpen(true);
   };
 
@@ -49,6 +59,14 @@ export default function AdminUserManagement() {
   };
 
   const handleSave = async () => {
+    const { name, password, phoneNumber, emailAddress, roleId } = formData;
+
+    // Kiểm tra dữ liệu trước khi gửi
+    if (!name || !password || !phoneNumber || !emailAddress || !roleId) {
+      alert("Vui lòng điền đầy đủ thông tin!");
+      return;
+    }
+
     try {
       const method = editingUser ? "PUT" : "POST";
       const endpoint = editingUser
@@ -64,9 +82,13 @@ export default function AdminUserManagement() {
       if (res.ok) {
         fetchUsers();
         handleClose();
+      } else {
+        const errorData = await res.json();
+        alert(`Lỗi khi lưu: ${errorData.message || "Không xác định"}`);
       }
     } catch (err) {
       console.error("Lỗi khi lưu:", err);
+      alert("Đã xảy ra lỗi khi lưu.");
     }
   };
 
@@ -124,9 +146,42 @@ export default function AdminUserManagement() {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{editingUser ? "Chỉnh sửa người dùng" : "Thêm người dùng"}</DialogTitle>
         <DialogContent>
-          <TextField name="name" label="Họ tên" value={formData.name} onChange={handleChange} fullWidth sx={{ mt: 2 }} />
-          <TextField name="emailAddress" label="Email" value={formData.emailAddress} onChange={handleChange} fullWidth sx={{ mt: 2 }} />
-          <TextField name="roleId" label="Quyền" value={formData.roleId} onChange={handleChange} fullWidth sx={{ mt: 2 }} />
+          <TextField
+            name="name"
+            label="Họ tên"
+            value={formData.name}
+            onChange={handleChange}
+            fullWidth sx={{ mt: 2 }}
+          />
+          <TextField
+            name="password"
+            label="Mật khẩu"
+            type="password"
+            value={formData.password}
+            onChange={handleChange}
+            fullWidth sx={{ mt: 2 }}
+          />
+          <TextField
+            name="phoneNumber"
+            label="Số điện thoại"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            fullWidth sx={{ mt: 2 }}
+          />
+          <TextField
+            name="emailAddress"
+            label="Email"
+            value={formData.emailAddress}
+            onChange={handleChange}
+            fullWidth sx={{ mt: 2 }}
+          />
+          <TextField
+            name="roleId"
+            label="Quyền"
+            value={formData.roleId}
+            onChange={handleChange}
+            fullWidth sx={{ mt: 2 }}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">Hủy</Button>
