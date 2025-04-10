@@ -19,6 +19,18 @@ router.delete("/categories/:id", categoriesController.deleteCategory); // Matche
 router.get("/categories", categoriesController.getAllCategories); // Changed from "GetCategories"
 router.get("/categories/:id", categoriesController.getCategoryById); // Added to match "getCategoryById"
 
+// Brands
+// Add - Create
+router.post("/brands/add", brandsController.create);
+// Update
+router.put("/brands/update/:id", brandsController.update);
+// Delete
+router.delete("/brands/delete/:id", brandsController.delete);
+// Get by ID
+router.get("/brands/:id", brandsController.getById);
+// Get al
+router.get("/brands", brandsController.getAll);
+
 // Keep the root route
 router.get("/", (req, res) => {
   return res.json({ message: "This is API" });
