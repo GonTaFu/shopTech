@@ -180,7 +180,7 @@ export default function CategoryManagement() {
     name: "",
   });
 
-  const API_URL = "http://localhost:3000/api"; // Connects to back-end
+  const API_URL = "http://localhost:4000/api"; // Connects to back-end
 
   useEffect(() => {
     const fetchCategories = async () => {

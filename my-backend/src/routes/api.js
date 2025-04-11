@@ -1,33 +1,20 @@
 var express = require("express");
 var router = express.Router();
 
-<<<<<<< HEAD
-var productsController = require('../controllers/ProductsController')
-var categoriesController = require('../controllers/CategoriesController')
-var brandsController = require('../controllers/BrandsControllers')
-var accountsController = require('../controllers/AccountsController')
-var ordersController = require('../controllers/OrdersController')
-var ordersDetailController = require('../controllers/OrdersDetailController')
-
-// Products
-// Add - Create
-router.post("/products/add", productsController.addProduct);
-// Update
-router.put("/products/update/:id", productsController.updateProduct);
-// Delete
-router.delete("/products/delete/:id", productsController.deleteProduct);
-// Get - Read
-router.get('/products/get/:id', productsController.getById);
-router.get("/products", productsController.getAll);
-
-
-=======
-var productssController = require("../controllers/ProductsController");
+var productsController = require("../controllers/ProductsController");
 var categoriesController = require("../controllers/CategoriesController");
 var brandsController = require("../controllers/BrandsControllers");
 var accountsController = require("../controllers/AccountsController");
 var ordersController = require("../controllers/OrdersController");
 var ordersDetailController = require("../controllers/OrdersDetailController");
+
+
+Products
+router.post("/products/add", productsController.addProduct);
+router.put("/products/update/:id", productsController.updateProduct);
+router.delete("/products/delete/:id", productsController.deleteProduct);
+router.get("/products/:id", productsController.getById);
+router.get("/products", productsController.getAll);
 
 // Categories
 // Add - Create
@@ -37,8 +24,8 @@ router.put("/categories/:id", categoriesController.updateCategory); // Matches "
 // Delete
 router.delete("/categories/:id", categoriesController.deleteCategory); // Matches "deleteCategory"
 // Get - Read
-router.get("/categories", categoriesController.getAllCategories); // Changed from "GetCategories"
 router.get("/categories/:id", categoriesController.getCategoryById); // Added to match "getCategoryById"
+router.get("/categories", categoriesController.getAllCategories); // Changed from "GetCategories"
 
 // Brands
 // Add - Create
@@ -56,13 +43,5 @@ router.get("/brands", brandsController.getAll);
 router.get("/", (req, res) => {
   return res.json({ message: "This is API" });
 });
-
-// Uncomment and update product routes if needed
-// Products
-// router.post("/products/add", productssController.AddProducts);
-// router.put("/products/update/:id", productssController.UpdateProducts);
-// router.delete("/products/delete/:id", productssController.DeleteProducts);
-// router.get("/products", productssController.GetProducts);
->>>>>>> 26fa3c7dbf8cca7bf5770465d3a0d98da6270807
 
 module.exports = router;

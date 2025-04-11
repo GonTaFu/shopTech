@@ -1,11 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-<<<<<<< HEAD
-var cors = require('cors')
-=======
-const cors = require('cors');
-
->>>>>>> 26fa3c7dbf8cca7bf5770465d3a0d98da6270807
+const cors = require('cors')
 const router = require('./routes')
 
 const app = express();
