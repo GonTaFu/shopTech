@@ -1,4 +1,4 @@
-"use client";
+// src/app/orderHistory/page.js
 import OrderHistory from "./OrderHistory";
 import { Typography } from "@mui/material";
 
@@ -14,14 +14,23 @@ async function fetchOrders() {
       );
     }
     const data = await response.json();
-    return data.map((order) => ({
-      OrderID: order._id,
-      Amount: order.total_price,
-      Order_Date: order.order_date,
-      Payment: order.payment,
-      Billing_Name: order.billing_name,
-      Status: order.status,
-    }));
+    console.log("Raw API response in fetchOrders:", data); // Debug
+    const mappedOrders = data.map((order, index) => {
+      const orderId = order.id || order._id || `fallback-${index}`; // Fallback if id is missing
+      if (!orderId) {
+        console.warn("Order ID is missing for order:", order);
+      }
+      return {
+        OrderID: orderId,
+        Amount: order.total_price || 0, // Fallback for missing fields
+        Order_Date: order.order_date || new Date().toISOString(),
+        Payment: order.payment || "Unknown",
+        Billing_Name: order.billing_name || "Unknown",
+        Status: order.status || "Unknown",
+      };
+    });
+    console.log("Mapped orders in fetchOrders:", mappedOrders); // Debug
+    return mappedOrders;
   } catch (error) {
     throw error;
   }

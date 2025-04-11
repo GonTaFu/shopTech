@@ -1,3 +1,5 @@
+"use client";
+// src/app/orderHistory/OrderHistory.js
 import { useState } from "react";
 import {
   Container,
@@ -9,22 +11,47 @@ import {
   Button,
   Divider,
   Box,
+  CircularProgress,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import PaymentIcon from "@mui/icons-material/Payment";
 import PersonIcon from "@mui/icons-material/Person";
+import { useRouter } from "next/navigation";
 
-export default function OrderHistory({ orders }) {
+export default function OrderHistory({ orders, isLoading = false }) {
   const [page, setPage] = useState(1);
   const itemsPerPage = 6;
+  const router = useRouter();
 
   const handleChange = (event, value) => {
     setPage(value);
   };
 
+  const handleViewDetails = (orderId) => {
+    if (!orderId) {
+      console.error("Order ID is undefined");
+      return;
+    }
+    router.push(`/OrderDetail/${orderId}`);
+  };
+
   const startIndex = (page - 1) * itemsPerPage;
   const displayedOrders = orders.slice(startIndex, startIndex + itemsPerPage);
+
+  if (isLoading) {
+    return (
+      <Container
+        maxWidth="md"
+        sx={{ mt: 4, marginBottom: "10%", textAlign: "center" }}
+      >
+        <CircularProgress />
+        <Typography variant="h6" sx={{ mt: 2 }}>
+          Loading orders...
+        </Typography>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, marginBottom: "10%" }}>
@@ -37,8 +64,11 @@ export default function OrderHistory({ orders }) {
         columnSpacing={{ xs: 1, sm: 2, md: 3 }}
         columns={12}
       >
-        {displayedOrders.map((order) => (
-          <Grid size={{ xs: 12, sm: 6, md: 6 }} key={order.OrderID}>
+        {displayedOrders.map((order, index) => (
+          <Grid
+            size={{ xs: 12, sm: 6, md: 6 }}
+            key={order.OrderID || `order-${index}`} // Fallback to index if OrderID is undefined
+          >
             <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
               <CardContent>
                 <Typography variant="h6" fontWeight="bold">
@@ -65,7 +95,12 @@ export default function OrderHistory({ orders }) {
                 </Box>
               </CardContent>
               <CardActions sx={{ justifyContent: "flex-end" }}>
-                <Button size="small" variant="outlined" color="primary">
+                <Button
+                  size="small"
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => handleViewDetails(order.OrderID)}
+                >
                   View Details
                 </Button>
               </CardActions>

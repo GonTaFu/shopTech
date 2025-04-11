@@ -10,7 +10,6 @@ var OrdersSchema = new Schema({
   },
   total_price: Number,
   status: String,
-  required: true,
 });
 
 var OrdersModel = mongoose.model("Orders", OrdersSchema);
