@@ -22,12 +22,9 @@ import {
   Select,
   InputLabel,
   FormControl,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Edit, Delete } from "@mui/icons-material";
-import axios from "axios";
 
 const ProductsManager = () => {
   const [products, setProducts] = useState([]);
@@ -36,6 +33,8 @@ const ProductsManager = () => {
 
   const [openDialog, setOpenDialog] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+
+  const [formErrors, setFormErrors] = useState({});
 
   const baseData = {
     name: "",
@@ -47,8 +46,42 @@ const ProductsManager = () => {
   };
   const [formData, setFormData] = useState(baseData);
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.name.trim()) errors.name = "Tên sản phẩm không được để trống";
+    if (formData.price === "") errors.price = "Giá không được để trống";
+    else if (isNaN(formData.price)) errors.price = "Giá phải là số";
+    else if (parseInt(formData.price) < 0) errors.price = "Giá phải ≥ 0";
+
+    if (!formData.category) errors.category = "Chọn loại sản phẩm";
+    if (!formData.brand) errors.brand = "Chọn hãng sản phẩm";
+    return errors;
+  }
+
+  const fetchAPI = async () => {
+    try {
+      const brandsRes = await API.get("/brands");
+      const categoriesRes = await API.get("/categories");
+      const productsRes = await API.get("/products");
+
+      setBrands(brandsRes.data);
+      setCategories(categoriesRes.data.data);
+
+      productsRes.data.map((p) => {
+        delete p.show;
+        delete p.__v;
+      });
+
+      setProducts(productsRes.data);
+      return true;
+    } catch (err) {
+      console.error("Lỗi khi fetch:", err);
+      return false;
+    }
+  }
+
   const handleOpenDialog = async (product = null) => {
-    const checkPorduct = await { ...product };
+    const checkPorduct = { ...product };
     if (checkPorduct) {
       checkPorduct.brand = (await checkPorduct.brand?._id) || "";
       checkPorduct.category = (await checkPorduct.category?._id) || "";
@@ -68,6 +101,7 @@ const ProductsManager = () => {
     setOpenDialog(false);
     setFormData(baseData);
     setEditingProduct(null);
+    setFormErrors({});
   };
 
   const handleChange = (e) => {
@@ -75,36 +109,31 @@ const ProductsManager = () => {
   };
 
   const handleSave = async () => {
-    if (editingProduct) {
-      // Update
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
 
-      // console.log(`Update: /products/update/${editingProduct._id}`);
-      var product = { ...formData };
-      await console.log("Product update: ", product);
+    var productFormData = {...formData};
+    productFormData.price = parseInt(productFormData.price);
 
-      try {
-        product.price = parseInt(product.price);
-        const res = await API.put(`/products/update/${editingProduct._id}`, product);
+    try {
+      if (editingProduct) {
+        const res = await API.put(`/products/update/${editingProduct._id}`, productFormData);
         console.log("Da update thanh cong");
-
-        const productsData = await API.get("/products");
-        setProducts(productsData.data);
-      } catch (err) {}
-    } else {
-      // Create
-      const newProduct = { ...formData };
-      newProduct.price = parseInt(newProduct.price);
-      try {
-        const res = await API.post("/products/add", newProduct);
+      }
+      else {
+        const res = await API.post("/products/add", productFormData);
         console.log("Đã gửi lên server:", res.data);
-
-        // Gộp dữ liệu trả về từ server (có _id) vào danh sách sản phẩm
-        const productsData = await API.get("/products");
-        setProducts(productsData.data);
-      } catch (error) {
-        console.error("Lỗi khi tạo sản phẩm:", error);
       }
     }
+    catch (err) {
+      console.log(`Lỗi khi phản hồi tới hệ thống máy chủ ${err}`);
+    }
+
+    const resFetch = await fetchAPI();
+    
     handleCloseDialog();
   };
 
@@ -127,31 +156,9 @@ const ProductsManager = () => {
 
   // Lấy dữ liệu
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const brandsRes = await API.get("/brands");
-        const categoriesRes = await API.get("/categories");
-        const productsRes = await API.get("/products");
-
-        setBrands(brandsRes.data);
-        setCategories(categoriesRes.data.data);
-
-        productsRes.data.map((p) => {
-          delete p.show;
-          delete p.__v;
-        });
-
-        setProducts(productsRes.data);
-
-        console.log("Dữ liệu đã load xong");
-      } catch (err) {
-        console.error("Lỗi khi fetch:", err);
-      }
-    };
-
-    fetchData();
+    fetchAPI()
   }, []);
-
+  
   return (
     <>
       {/* {console.log("Products: ", products)}
@@ -230,6 +237,7 @@ const ProductsManager = () => {
           </DialogTitle>
           <DialogContent>
             <TextField
+              required
               autoFocus
               margin="dense"
               label="Tên sản phẩm"
@@ -237,20 +245,25 @@ const ProductsManager = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
+              error={!!formErrors.name}
+              helperText={formErrors.name}
             />
             <TextField
+              required
               margin="dense"
               label="Giá (VNĐ)"
               fullWidth
               name="price"
               type="number"
-              value={formData.price}
+              value={formData.price}  
               onChange={handleChange}
+              error={!!formErrors.price}
+              helperText={formErrors.price}
             />
-            <FormControl fullWidth margin="dense">
+            <FormControl fullWidth margin="dense" error={!!formErrors.category}>
               <InputLabel>Loại sản phẩm</InputLabel>
-
               <Select
+                required
                 name="category"
                 value={formData.category || ""}
                 onChange={handleChange}
@@ -263,9 +276,10 @@ const ProductsManager = () => {
                 ))}
               </Select>
             </FormControl>
-            <FormControl fullWidth margin="dense">
+            <FormControl fullWidth margin="dense" error={!!formErrors.brand}>
               <InputLabel>Hãng</InputLabel>
               <Select
+                required
                 name="brand"
                 value={formData.brand || ""}
                 onChange={handleChange}
