@@ -22,7 +22,7 @@ async function fetchOrders() {
       }
       return {
         OrderID: orderId,
-        Amount: order.total_price || 0, // Fallback for missing fields
+        Amount: order.total_price || 0,
         Order_Date: order.order_date || new Date().toISOString(),
         Payment: order.payment || "Unknown",
         Billing_Name: order.billing_name || "Unknown",

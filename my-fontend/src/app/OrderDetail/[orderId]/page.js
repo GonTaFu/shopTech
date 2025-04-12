@@ -17,11 +17,25 @@ async function fetchOrderById(orderId) {
       );
     }
     const data = await response.json();
-    console.log("Raw API response in fetchOrderById:", data); // Debug
-    const order = Array.isArray(data) ? data[0] : data; // Handle if API returns an array
-    if (!order) {
-      throw new Error("Order not found in API response");
+    console.log(
+      "Raw API response in fetchOrderById for orderId",
+      orderId,
+      ":",
+      data
+    ); // Debug
+
+    // If the API returns a list, filter for the order with the matching id
+    let order;
+    if (Array.isArray(data)) {
+      order = data.find((o) => (o.id || o._id) === orderId);
+    } else {
+      order = data;
     }
+
+    if (!order) {
+      throw new Error(`Order with ID ${orderId} not found in API response`);
+    }
+
     const orderIdField = order.id || order._id || "unknown"; // Fallback if id is missing
     if (!orderIdField) {
       console.warn("Order ID is missing for order:", order);
@@ -29,12 +43,17 @@ async function fetchOrderById(orderId) {
     const mappedOrder = {
       OrderID: orderIdField,
       Amount: order.total_price || 0,
-      Order_Date: order.order_date || new Date().toISOString(),
+      Order_Date: order.order_date || null, // Use null instead of new Date()
       Payment: order.payment || "Unknown",
       Billing_Name: order.billing_name || "Unknown",
       Status: order.status || "Unknown",
     };
-    console.log("Mapped order in fetchOrderById:", mappedOrder); // Debug
+    console.log(
+      "Mapped order in fetchOrderById for orderId",
+      orderId,
+      ":",
+      mappedOrder
+    ); // Debug
     return mappedOrder;
   } catch (error) {
     throw error;
@@ -43,7 +62,7 @@ async function fetchOrderById(orderId) {
 
 export default async function Page({ params }) {
   console.log("Params in OrderDetail page:", params); // Debug
-  const { orderId } = params;
+  const orderId = params?.orderId; // Safely extract orderId with fallback
   let order = null;
   let error = null;
 
