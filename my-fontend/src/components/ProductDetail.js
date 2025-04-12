@@ -30,8 +30,8 @@ const TableProductDetail = ({ product }) => {
   const displayData = {
     Name: product.name,
     Price: product.price,
-    Brand: product.brand,
-    Category: product.categories_id,
+    Brand: product.brand?.name || "",
+    Category: product.category?.name || "",
   };
   return (
     <TableContainer>
@@ -60,9 +60,6 @@ const ProductDetail = ({ product }) => {
   delete data_table.show;
   delete data_table.__v;
 
-  data_table.brand = data_table.brand?.name || "";
-  data_table.categories_id = data_table.categories_id?.name || "";
-
   return (
     <>
       <Container sx={{ py: 4 }} maxWidth="md">
@@ -88,7 +85,7 @@ const ProductDetail = ({ product }) => {
                   {product.name}
                 </Typography>
                 <Typography gutterBottom variant="h8" component="div">
-                  SKU: {product._id}
+                  Mã sản phẩm: {product._id}
                 </Typography>
                 {/* <Rating name="read-only" value={product.rate} readOnly /> */}
                 <Typography gutterBottom variant="h8" component="div">
@@ -96,6 +93,9 @@ const ProductDetail = ({ product }) => {
                 </Typography>
                 <Typography variant="h8" component="div">
                   Thương hiệu: {product.brand.name}
+                </Typography>
+                <Typography variant="h8" component="div">
+                  TLoại sản phẩm: {product.category.name}
                 </Typography>
                 {/* <Typography variant="h8" component="div">
                   Status: {product.status}

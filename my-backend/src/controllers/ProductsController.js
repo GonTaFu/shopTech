@@ -9,7 +9,7 @@ class ProductsController {
   async getAll(req, res) {
     try {
       const products = await Products.find()
-        .populate("categories_id")
+        .populate("category")
         .populate("brand");
 
       res.status(200).json(products);
@@ -22,7 +22,7 @@ class ProductsController {
   async getById(req, res) {
     try {
       const product = await Products.findById(req.params.id)
-        .populate("categories_id")
+        .populate("category")
         .populate("brand");
 
       if (!product)
@@ -37,13 +37,13 @@ class ProductsController {
   // Create
   async addProduct(req, res) {
     try {
-      const { name, description, price, categories_id, brand, images } =
+      const { name, description, price, category, brand, images } =
         req.body;
 
       if (
         !name ||
         !price ||
-        !categories_id ||
+        !category ||
         !images ||
         !description ||
         !brand
@@ -58,7 +58,7 @@ class ProductsController {
         name,
         description,
         price,
-        categories_id,
+        category,
         brand,
         images,
         show: true,
@@ -81,16 +81,16 @@ class ProductsController {
         return res.status(404).json({ message: "Product not found" });
       }
 
-      const { name, description, price, categories_id, brand, images, show } =
+      const { name, description, price, category, brand, images } =
         req.body;
 
       product.name = name;
       product.description = description;
       product.price = price;
-      product.categories_id = categories_id;
+      product.category = category;
       product.brand = brand;
       product.images = images;
-      product.show = show;
+      product.show = true;
 
       await product.save();
       return res.json({ message: "Update product successfully", product });

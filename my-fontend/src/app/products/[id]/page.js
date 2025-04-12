@@ -15,7 +15,7 @@ export default function Page() {
 
     const fetchData = async () => {
       try {
-        const res = await fetch(`http://localhost:4000/api/products/get/${id}`);
+        const res = await fetch(`http://localhost:4000/api/products/${id}`);
         if (!res.ok) throw new Error("Fetch failed");
         const data = await res.json();
         setProduct(data);

@@ -7,7 +7,7 @@ var ProductsSchema = new Schema({
     name: String,
     description: String,
     price: Number,
-    categories_id:{
+    category:{
         type: String,
         ref: 'Categories'
     },

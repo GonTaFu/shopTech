@@ -1,134 +1,164 @@
-  "use client"  
-  // frontend
-  import { useState, useEffect } from "react";
-  import {
-    Container,
-    Typography,
-    Button,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    TextField,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    IconButton,
-    MenuItem,
-    Select,
-    InputLabel,
-    FormControl,
-  } from "@mui/material";
-  import Grid from "@mui/material/Grid";
-  import { Edit, Delete } from "@mui/icons-material";
+"use client";
+import { useState, useEffect } from "react";
+import API from "../utils/api";
+import {
+  Container,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Snackbar,
+  Alert,
+} from "@mui/material";
+import Grid from "@mui/material/Grid";
+import { Edit, Delete } from "@mui/icons-material";
+import axios from "axios";
 
-  const ProductsManager = () => {
-    const [products, setProducts] = useState([]);
+const ProductsManager = () => {
+  const [products, setProducts] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-    const [openDialog, setOpenDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
 
-    const [editingProduct, setEditingProduct] = useState(null);
+  const baseData = {
+    name: "",
+    price: 0,
+    brand: "",
+    category: "",
+    description: "",
+    images: ["", "", ""],
+  };
+  const [formData, setFormData] = useState(baseData);
 
-    const [formData, setFormData] = useState({
-      name: "",
-      price: "",
-      brand: "",
-      category: "",
-    });
+  const handleOpenDialog = async (product = null) => {
+    const checkPorduct = await { ...product };
+    if (checkPorduct) {
+      checkPorduct.brand = (await checkPorduct.brand?._id) || "";
+      checkPorduct.category = (await checkPorduct.category?._id) || "";
+    }
 
-    const [brands, setBrands] = useState([]);
-    const [categories, setCategories] = useState([]);
+    setEditingProduct(product);
+    if (product == null) {
+      setFormData(baseData)
+    }
+    else {
+      setFormData(checkPorduct)
+    }
+    setOpenDialog(true);
+  };
 
-    useEffect(() => {
-      // Giả lập API fetch brands
-      setTimeout(() => {
-        setBrands([
-          { id: 1, name: "Sony" },
-          { id: 2, name: "Logitech" },
-          { id: 3, name: "LG" },
-        ]);
-      }, 500);
+  const handleCloseDialog = async () => {
+    setOpenDialog(false);
+    setFormData(baseData);
+    setEditingProduct(null);
+  };
 
-      // Giả lập API fetch categories
-      setTimeout(() => {
-        setCategories([
-          { id: 1, name: "Tai nghe" },
-          { id: 2, name: "Bàn phím" },
-          { id: 3, name: "Sạc dự phòng" },
-          { id: 4, name: "CPU" },
-        ]);
-      }, 500);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-      // Giả lập API fetch products
-      setTimeout(() => {
-        const fakeData = [
-          {
-            id: 1,
-            name: "Tai nghe Bluetooth",
-            price: "990000",
-            brand: "Sony",
-            category: "Tai nghe",
-          },
-          {
-            id: 2,
-            name: "Bàn phím cơ",
-            brand: "Logitech",
-            price: "1290000",
-            category: "Bàn phím",
-          },
-        ];
-        setProducts(fakeData);
-      }, 500);
-    }, []);
+  const handleSave = async () => {
+    if (editingProduct) {
+      // Update
 
-    const handleOpenDialog = (product = null) => {
-      setEditingProduct(product);
-      setFormData(product || { name: "", price: "", category: "" });
-      setOpenDialog(true);
-    };
+      // console.log(`Update: /products/update/${editingProduct._id}`);
+      var product = { ...formData };
+      await console.log("Product update: ", product);
 
-    const handleCloseDialog = () => {
-      setOpenDialog(false);
-      setFormData({ name: "", price: "", category: "" });
-      setEditingProduct(null);
-    };
+      try {
+        product.price = parseInt(product.price);
+        const res = await API.put(`/products/update/${editingProduct._id}`, product);
+        console.log("Da update thanh cong");
 
-    const handleChange = (e) => {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+        const productsData = await API.get("/products");
+        setProducts(productsData.data);
+      } catch (err) {}
+    } else {
+      // Create
+      const newProduct = { ...formData };
+      newProduct.price = parseInt(newProduct.price);
+      try {
+        const res = await API.post("/products/add", newProduct);
+        console.log("Đã gửi lên server:", res.data);
 
-    const handleSave = () => {
-      if (editingProduct) {
-        // Update
-        setProducts(
-          products.map((p) =>
-            p.id === editingProduct.id ? { ...formData, id: p.id } : p
-          )
-        );
-      } else {
-        // Create
-        const newProduct = { ...formData, id: Date.now() };
-        setProducts([...products, newProduct]);
+        // Gộp dữ liệu trả về từ server (có _id) vào danh sách sản phẩm
+        const productsData = await API.get("/products");
+        setProducts(productsData.data);
+      } catch (error) {
+        console.error("Lỗi khi tạo sản phẩm:", error);
       }
-      handleCloseDialog();
-    };
+    }
+    handleCloseDialog();
+  };
 
-    const handleDelete = (id) => {
-      if (confirm("Bạn có chắc muốn xoá sản phẩm này?")) {
-        setProducts(products.filter((p) => p.id !== id));
+  const handleDelete = async (id = null) => {
+    try {
+      console.log("handleDelete: ", id)
+      if (id == null) return;
+      
+      const res = await API.delete(`/products/delete/${id}`);
+
+      const productsData = await API.get("/products");
+      setProducts(productsData.data);
+
+      console.log(res)
+    }
+    catch (err) {
+
+    }
+  }
+
+  // Lấy dữ liệu
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const brandsRes = await API.get("/brands");
+        const categoriesRes = await API.get("/categories");
+        const productsRes = await API.get("/products");
+
+        setBrands(brandsRes.data);
+        setCategories(categoriesRes.data.data);
+
+        productsRes.data.map((p) => {
+          delete p.show;
+          delete p.__v;
+        });
+
+        setProducts(productsRes.data);
+
+        console.log("Dữ liệu đã load xong");
+      } catch (err) {
+        console.error("Lỗi khi fetch:", err);
       }
     };
 
-    return (
-      <Container sx={{ mt: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Quản lý Sản phẩm
-        </Typography>
+    fetchData();
+  }, []);
 
+  return (
+    <>
+      {/* {console.log("Products: ", products)}
+        {console.log("Categories: ", categories)}
+        {console.log("Brands: ", brands)} */}
+      <Container sx={{}}>
+        {/* Nút thêm sản phẩm */}
         <Container>
           <Grid
             container
@@ -147,29 +177,32 @@
           </Grid>
         </Container>
 
+        {/* Hiển thị danh sách sản phẩm */}
         <TableContainer component={Paper} sx={{ mt: 2 }}>
           <Table>
             <TableHead>
               <TableRow>
+              <TableCell>ID</TableCell>
                 <TableCell>Tên</TableCell>
+                <TableCell>Loại sản phẩm</TableCell>
                 <TableCell>Hãng</TableCell>
                 <TableCell>Giá</TableCell>
-                <TableCell>Loại sản phẩm</TableCell>
                 <TableCell align="right">Hành động</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {products.map((prod) => (
-                <TableRow key={prod.id}>
+                <TableRow key={prod._id}>
+                  <TableCell>{prod._id}</TableCell>
                   <TableCell>{prod.name}</TableCell>
-                  <TableCell>{prod.brand}</TableCell>
-                  <TableCell>{Number(prod.price).toLocaleString()}đ</TableCell>
-                  <TableCell>{prod.category}</TableCell>
+                  <TableCell>{prod.category.name}</TableCell>
+                  <TableCell>{prod.brand.name}</TableCell>
+                  <TableCell>{prod.price}</TableCell>
                   <TableCell align="right">
                     <IconButton onClick={() => handleOpenDialog(prod)}>
                       <Edit />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(prod.id)}>
+                    <IconButton onClick={() => handleDelete(prod._id)}>
                       <Delete color="error" />
                     </IconButton>
                   </TableCell>
@@ -187,7 +220,11 @@
         </TableContainer>
 
         {/* Dialog thêm / sửa */}
-        <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <Dialog
+          open={openDialog}
+          onClose={handleCloseDialog}
+          disableRestoreFocus
+        >
           <DialogTitle>
             {editingProduct ? "Chỉnh sửa" : "Thêm"} sản phẩm
           </DialogTitle>
@@ -220,7 +257,7 @@
                 label="Loại sản phẩm"
               >
                 {categories.map((c) => (
-                  <MenuItem key={c.id} value={c.name}>
+                  <MenuItem key={c._id} value={c._id}>
                     {c.name}
                   </MenuItem>
                 ))}
@@ -235,12 +272,41 @@
                 label="Hãng"
               >
                 {brands.map((b) => (
-                  <MenuItem key={b.id} value={b.name}>
+                  <MenuItem key={b._id} value={b._id}>
                     {b.name}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
+
+            <TextField
+              margin="dense"
+              label="Mô tả"
+              fullWidth
+              multiline
+              rows={3}
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+            />
+            <Typography sx={{ mt: 2 }}>Ảnh sản phẩm</Typography>
+            {formData.images?.map((img, index) => (
+              <TextField
+                key={index}
+                margin="dense"
+                label={`Ảnh ${index + 1}`}
+                fullWidth
+                name={`image-${index}`}
+                value={img}
+                onChange={(e) => {
+                  const newImages = [...formData.images];
+                  newImages[index] = e.target.value;
+                  setFormData({ ...formData, images: newImages });
+                }}
+              />
+            )) || console.log("K: ", formData.images)}
+            {/* {console.log("Form Data: ", formData)} */}
+            {console.log("Editing products: ", editingProduct)}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog}>Huỷ</Button>
@@ -250,7 +316,8 @@
           </DialogActions>
         </Dialog>
       </Container>
-    );
-  };
+    </>
+  );
+};
 
-  export default ProductsManager;
+export default ProductsManager;

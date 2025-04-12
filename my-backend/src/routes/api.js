@@ -9,10 +9,11 @@ var ordersController = require("../controllers/OrdersController");
 var ordersDetailController = require("../controllers/OrdersDetailController");
 
 
-Products
+// Products
 router.post("/products/add", productsController.addProduct);
 router.put("/products/update/:id", productsController.updateProduct);
-router.delete("/products/delete/:id", productsController.deleteProduct);
+// router.delete("/products/delete/:id", productsController.deleteProduct);
+router.delete("/products/delete/:id", productsController.destroyProduct);
 router.get("/products/:id", productsController.getById);
 router.get("/products", productsController.getAll);
 
