@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Accounts = require("../models/AccountsModel");
+const jwt = require("../utils/jwt");
 
 class AccountController {
   // Lấy tất cả tài khoản
@@ -85,6 +86,20 @@ class AccountController {
       return res.json({ message: "Delete account successfully" });
     } catch (error) {
       return res.status(500).json({ error: "Internal Server Error", detail: error.message });
+    }
+  }
+
+  async login(req, res) {
+    const { emailAddress, password } = req.body;
+    try {
+      const account = await Accounts.findOne({ emailAddress, password });
+      if (!account)
+        return res.status(401).json({ message: "Email hoặc mật khẩu không đúng" });
+
+      const token = jwt.generateToken({ id: account._id, role: account.roleId });
+      return res.json({ token, role: account.roleId });
+    } catch (error) {
+      return res.status(500).json({ message: "Đăng nhập thất bại", error });
     }
   }
 }

@@ -35,6 +35,7 @@ router.put("/accounts/update/:id", accountsController.updateAccount);
 router.delete("/accounts/delete/:id", accountsController.deleteAccount);
 router.get("/accounts", accountsController.getAll);
 router.get("/accounts/:id", accountsController.getById);
+router.post("/accounts/login", accountsController.login);
 
 
 // 
