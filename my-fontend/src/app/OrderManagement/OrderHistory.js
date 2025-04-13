@@ -56,7 +56,7 @@ export default function OrderHistory({ orders, isLoading = false }) {
   }
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4, marginBottom: "10%" }}>
+    <Container maxWidth="md" sx={{ mt: 4, marginBottom: "10%"}}>
       <Typography variant="h4" gutterBottom textAlign="center">
         🛒 Order History
       </Typography>
