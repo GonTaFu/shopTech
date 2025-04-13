@@ -55,10 +55,7 @@ const TableProductDetail = ({ product }) => {
 
 const ProductDetail = ({ product }) => {
   const data_table = { ...product };
-  delete data_table.images;
-  delete data_table.description;
-  delete data_table.show;
-  delete data_table.__v;
+  
 
   return (
     <>
@@ -95,7 +92,7 @@ const ProductDetail = ({ product }) => {
                   Thương hiệu: {product.brand.name}
                 </Typography>
                 <Typography variant="h8" component="div">
-                  TLoại sản phẩm: {product.category.name}
+                  Loại sản phẩm: {product.category.name}
                 </Typography>
                 {/* <Typography variant="h8" component="div">
                   Status: {product.status}

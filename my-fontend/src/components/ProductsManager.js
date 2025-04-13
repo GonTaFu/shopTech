@@ -161,9 +161,9 @@ const ProductsManager = () => {
   
   return (
     <>
-      {/* {console.log("Products: ", products)}
+      {console.log("Products: ", products)}
         {console.log("Categories: ", categories)}
-        {console.log("Brands: ", brands)} */}
+        {console.log("Brands: ", brands)}
       <Container sx={{}}>
         {/* Nút thêm sản phẩm */}
         <Container>
