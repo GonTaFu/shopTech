@@ -95,9 +95,13 @@ class AccountController {
       const account = await Accounts.findOne({ emailAddress, password });
       if (!account)
         return res.status(401).json({ message: "Email hoặc mật khẩu không đúng" });
-
       const token = jwt.generateToken({ id: account._id, role: account.roleId });
-      return res.json({ token, role: account.roleId });
+  
+      return res.json({
+        token,
+        role: account.roleId,
+        fullName: account.name, // 👈 THÊM DÒNG NÀY
+      });
     } catch (error) {
       return res.status(500).json({ message: "Đăng nhập thất bại", error });
     }

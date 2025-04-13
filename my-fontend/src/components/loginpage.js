@@ -1,10 +1,11 @@
   'use client';
-
   import React, { useState } from 'react';
   import {
     Box, Paper, Grid, Typography, Button, Divider, TextField
   } from '@mui/material';
   import { useRouter } from 'next/navigation';
+  import Cookies from 'js-cookie';
+
 
   export default function LoginPage() {
     const router = useRouter();
@@ -27,7 +28,9 @@
           return;
         }
 
-        localStorage.setItem('token', data.token);
+        Cookies.set('token', data.token, { expires: 1 / 24 }); // Cookie tồn tại 1 giờ
+        Cookies.set('userName', data.fullName, { expires: 1 / 24 }); 
+
 
         if (data.role === 'admin') {
           router.push('/admin');

@@ -8,7 +8,7 @@ const AdminPage = () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <Sidebar />
-      <AdminDashboard />
+      <AdminDashboard></AdminDashboard>
     </Box>
   );
 };

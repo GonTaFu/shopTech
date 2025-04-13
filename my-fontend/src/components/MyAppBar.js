@@ -12,6 +12,8 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { alpha, styled } from "@mui/material/styles";
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 const StyledToolBar = styled(ToolBar)(({ theme }) => ({
   display: 'flex',
@@ -32,17 +34,28 @@ const StyledToolBar = styled(ToolBar)(({ theme }) => ({
 export default function MyAppBar() {
   const [open, setOpen] = React.useState(false);
   const [isClient, setIsClient] = React.useState(false);
+  const [userName, setUserName] = React.useState('');
+  const router = useRouter();
 
   React.useEffect(() => {
-    setIsClient(true); // Điều này giúp xác định khi đang chạy trên client
+    setIsClient(true);
+    const name = Cookies.get('userName');
+    if (name) setUserName(name);
   }, []);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
 
+  const handleLogout = () => {
+    Cookies.remove('token');
+    Cookies.remove('userName');
+    setUserName('');
+    router.push('/account');
+  };
+
   if (!isClient) {
-    return null; // Trả về null trong quá trình SSR
+    return null;
   }
 
   return (
@@ -53,7 +66,6 @@ export default function MyAppBar() {
         boxShadow: 0,
         bgcolor: "transparent",
         backgroundImage: "none",
-        mt: "calc(var(--template-frame-height, 0px) + 28px)",
         mt: 8
       }}
     >
@@ -69,10 +81,27 @@ export default function MyAppBar() {
               <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>Blog</Button>
             </Box>
           </Box>
+
+          {/* Desktop */}
           <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1, alignItems: 'center' }}>
-            <Button color="primary" variant="text" size="small" href="/account">Sign in</Button>
-            <Button color="primary" variant="contained" size="small" href="/account/register">Sign up</Button>
+            {userName ? (
+              <>
+                <Box sx={{ mr: 2, color: "black" }}>
+                  <strong>Xin chào, {userName}</strong>
+                </Box>
+                <Button color="error" variant="text" size="small" onClick={handleLogout}>
+                  Đăng xuất
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button color="primary" variant="text" size="small" href="/account">Sign in</Button>
+                <Button color="primary" variant="contained" size="small" href="/account/register">Sign up</Button>
+              </>
+            )}
           </Box>
+
+          {/* Mobile */}
           <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
             <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
               <MenuIcon />
@@ -82,9 +111,7 @@ export default function MyAppBar() {
               open={open}
               onClose={toggleDrawer(false)}
               PaperProps={{
-                sx: {
-                  top: 'var(--template-frame-height, 0px)',
-                },
+                sx: { top: 'var(--template-frame-height, 0px)' },
               }}
             >
               <Box sx={{ p: 2, backgroundColor: 'background.default' }}>
@@ -100,12 +127,31 @@ export default function MyAppBar() {
                 <MenuItem>FAQ</MenuItem>
                 <MenuItem>Blog</MenuItem>
                 <Divider sx={{ my: 3 }} />
-                <MenuItem>
-                  <Button color="primary" variant="contained" fullWidth>Sign up</Button>
-                </MenuItem>
-                <MenuItem>
-                  <Button color="primary" variant="outlined" fullWidth>Sign in</Button>
-                </MenuItem>
+                {userName ? (
+                  <>
+                    <MenuItem>
+                      <strong>Xin chào, {userName}</strong>
+                    </MenuItem>
+                    <MenuItem>
+                      <Button color="error" variant="outlined" fullWidth onClick={handleLogout}>
+                        Đăng xuất
+                      </Button>
+                    </MenuItem>
+                  </>
+                ) : (
+                  <>
+                    <MenuItem>
+                      <Button color="primary" variant="contained" fullWidth href="/account/register">
+                        Sign up
+                      </Button>
+                    </MenuItem>
+                    <MenuItem>
+                      <Button color="primary" variant="outlined" fullWidth href="/account">
+                        Sign in
+                      </Button>
+                    </MenuItem>
+                  </>
+                )}
               </Box>
             </Drawer>
           </Box>
