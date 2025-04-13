@@ -28,10 +28,13 @@ import Link from "next/link";
 
 const TableProductDetail = ({ product }) => {
   const displayData = {
+    ID: product._id,
     Name: product.name,
     Price: product.price,
     Brand: product.brand?.name || "",
     Category: product.category?.name || "",
+    Quantity: product.quantity,
+    Warranty: `${product.warranty} Tháng`
   };
   return (
     <TableContainer>
@@ -97,12 +100,9 @@ const ProductDetail = ({ product }) => {
                 {/* <Typography variant="h8" component="div">
                   Status: {product.status}
                 </Typography> */}
-                {/* <Typography variant="h8" component="div">
-                  Warranty: {product.warranty}
-                </Typography> */}
-                {/* <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  {product.description}
-                </Typography> */}
+                <Typography variant="h8" component="div">
+                  Bảo hành: {product.warranty} Tháng
+                </Typography>
               </CardContent>
               <CardActions bgcolor="text.disabled">
                 <Button

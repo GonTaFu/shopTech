@@ -50,15 +50,26 @@ const ProductsManager = () => {
     category: "",
     description: "",
     images: ["", "", ""],
+    quantity: 0, 
+    warranty: 0
   };
   const [formData, setFormData] = useState(baseData);
 
   const validateForm = () => {
     const errors = {};
     if (!formData.name.trim()) errors.name = "Tên sản phẩm không được để trống";
+
     if (formData.price === "") errors.price = "Giá không được để trống";
     else if (isNaN(formData.price)) errors.price = "Giá phải là số";
     else if (parseInt(formData.price) < 0) errors.price = "Giá phải ≥ 0";
+
+    if (formData.quantity === "") errors.quantity = "Số lượng không được để trống";
+    else if (isNaN(formData.quantity)) errors.quantity = "Số lượng phải là số";
+    else if (parseInt(formData.quantity) < 0) errors.quantity = "Số lượng phải ≥ 0";
+
+    if (formData.warranty === "") errors.warranty = "Thời hạn (tháng) không được để trống";
+    else if (isNaN(formData.warranty)) errors.warranty = "Thời hạn (tháng) phải là số";
+    else if (parseInt(formData.warranty) < 0) errors.warranty = "Thời hạn (tháng) phải ≥ 0";
 
     if (!formData.category) errors.category = "Chọn loại sản phẩm";
     if (!formData.brand) errors.brand = "Chọn hãng sản phẩm";
@@ -349,6 +360,30 @@ const ProductsManager = () => {
               onChange={handleChange}
               error={!!formErrors.price}
               helperText={formErrors.price}
+            />
+            <TextField
+              required
+              margin="dense"
+              label="Số lượng"
+              fullWidth
+              name="quantity"
+              type="number"
+              value={formData.quantity}
+              onChange={handleChange}
+              error={!!formErrors.quantity}
+              helperText={formErrors.quantity}
+            />
+            <TextField
+              required
+              margin="dense"
+              label="Thời hạn bảo hành (tháng)"
+              fullWidth
+              name="warranty"
+              type="number"
+              value={formData.warranty}
+              onChange={handleChange}
+              error={!!formErrors.warranty}
+              helperText={formErrors.warranty}
             />
             <FormControl fullWidth margin="dense" error={!!formErrors.category}>
               <InputLabel>Loại sản phẩm</InputLabel>

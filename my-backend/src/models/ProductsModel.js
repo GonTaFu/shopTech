@@ -16,7 +16,9 @@ var ProductsSchema = new Schema({
         ref: 'Brands'
     },
     images: [String],
-    show: Boolean
+    quantity: Number,
+    warranty: Number,
+    show: Boolean,
 });
 
 var ProductModel = mongoose.model('Products', ProductsSchema);

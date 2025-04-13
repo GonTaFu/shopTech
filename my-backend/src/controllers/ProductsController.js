@@ -51,9 +51,9 @@ class ProductsController {
   // Create
   async addProduct(req, res) {
     try {
-      const { name, description, price, category, brand, images } = req.body;
+      const { name, description, price, category, brand, images, quantity, warranty } = req.body;
 
-      if (!name || !price || !category || !images || !description || !brand) {
+      if (!name || !price || !category || !images || !description || !brand || !quantity || !warranty) {
         return res.status(400).json({ message: "Missing required fields" });
       }
 
@@ -67,6 +67,8 @@ class ProductsController {
         category,
         brand,
         images,
+        quantity, 
+        warranty,
         show: true,
       });
 
@@ -87,14 +89,20 @@ class ProductsController {
         return res.status(404).json({ message: "Product not found" });
       }
 
-      const { name, description, price, category, brand, images } = req.body;
-
+      const { name, description, price, category, brand, images, quantity, warranty } = req.body;
+      
+      if (!name || !price || !category || !images || !description || !brand || !quantity || !warranty) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+      
       product.name = name;
       product.description = description;
       product.price = price;
       product.category = category;
       product.brand = brand;
       product.images = images;
+      product.quantity = quantity;
+      product.warranty = warranty;
       product.show = true;
 
       await product.save();
