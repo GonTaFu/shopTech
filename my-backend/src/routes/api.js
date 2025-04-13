@@ -12,8 +12,10 @@ var ordersDetailController = require("../controllers/OrdersDetailController");
 // Products
 router.post("/products/add", productsController.addProduct);
 router.put("/products/update/:id", productsController.updateProduct);
-// router.delete("/products/delete/:id", productsController.deleteProduct);
-router.delete("/products/delete/:id", productsController.destroyProduct);
+router.delete("/products/delete/:id", productsController.deleteProduct);
+router.delete("/products/destroy/:id", productsController.destroyProduct);
+router.patch("/products/restore/:id", productsController.restoreProduct);
+router.get("/products/trash", productsController.getTrash);
 router.get("/products/:id", productsController.getById);
 router.get("/products", productsController.getAll);
 

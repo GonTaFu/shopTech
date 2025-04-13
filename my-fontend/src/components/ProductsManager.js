@@ -25,6 +25,9 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { Edit, Delete } from "@mui/icons-material";
+import RestoreIcon from "@mui/icons-material/Restore";
+
+import HandleServerError from "./HandleServerError";
 
 const ProductsManager = () => {
   const [products, setProducts] = useState([]);
@@ -35,6 +38,10 @@ const ProductsManager = () => {
   const [editingProduct, setEditingProduct] = useState(null);
 
   const [formErrors, setFormErrors] = useState({});
+  const [errorServer, setErrorServer] = useState(false);
+
+  const [title, setTitle] = useState("Danh sách sản phẩm");
+  const [isTrash, setIsTrash] = useState(false);
 
   const baseData = {
     name: "",
@@ -56,13 +63,15 @@ const ProductsManager = () => {
     if (!formData.category) errors.category = "Chọn loại sản phẩm";
     if (!formData.brand) errors.brand = "Chọn hãng sản phẩm";
     return errors;
-  }
+  };
 
-  const fetchAPI = async () => {
+  const fetchAPI = async (isTrash = false) => {
     try {
       const brandsRes = await API.get("/brands");
       const categoriesRes = await API.get("/categories");
-      const productsRes = await API.get("/products");
+      var productsRes = await API.get(
+        isTrash ? "/products/trash" : "/products"
+      );
 
       setBrands(brandsRes.data);
       setCategories(categoriesRes.data.data);
@@ -73,26 +82,34 @@ const ProductsManager = () => {
       });
 
       setProducts(productsRes.data);
-      return true;
+
+      if (
+        brandsRes.status != 200 ||
+        categoriesRes.status != 200 ||
+        productsRes.status != 200
+      ) {
+        setErrorServer(true);
+        return;
+      }
+
+      setErrorServer(false);
     } catch (err) {
-      console.error("Lỗi khi fetch:", err);
-      return false;
+      setErrorServer(true);
     }
-  }
+  };
 
   const handleOpenDialog = async (product = null) => {
     const checkPorduct = { ...product };
     if (checkPorduct) {
-      checkPorduct.brand = (await checkPorduct.brand?._id) || "";
-      checkPorduct.category = (await checkPorduct.category?._id) || "";
+      checkPorduct.brand = checkPorduct.brand?._id || "";
+      checkPorduct.category = checkPorduct.category?._id || "";
     }
 
     setEditingProduct(product);
     if (product == null) {
-      setFormData(baseData)
-    }
-    else {
-      setFormData(checkPorduct)
+      setFormData(baseData);
+    } else {
+      setFormData(checkPorduct);
     }
     setOpenDialog(true);
   };
@@ -115,72 +132,135 @@ const ProductsManager = () => {
       return;
     }
 
-    var productFormData = {...formData};
+    var productFormData = { ...formData };
     productFormData.price = parseInt(productFormData.price);
 
     try {
       if (editingProduct) {
-        const res = await API.put(`/products/update/${editingProduct._id}`, productFormData);
+        const res = await API.put(
+          `/products/update/${editingProduct._id}`,
+          productFormData
+        );
         console.log("Da update thanh cong");
-      }
-      else {
+      } else {
         const res = await API.post("/products/add", productFormData);
         console.log("Đã gửi lên server:", res.data);
       }
-    }
-    catch (err) {
-      console.log(`Lỗi khi phản hồi tới hệ thống máy chủ ${err}`);
+    } catch (err) {
+      setErrorServer(true);
     }
 
     const resFetch = await fetchAPI();
-    
+
     handleCloseDialog();
   };
 
-  const handleDelete = async (id = null) => {
+  const handleDelete = async (id = null, isTrash = false) => {
     try {
-      console.log("handleDelete: ", id)
       if (id == null) return;
-      
-      const res = await API.delete(`/products/delete/${id}`);
 
-      const productsData = await API.get("/products");
-      setProducts(productsData.data);
+      const url = isTrash
+        ? `/products/destroy/${id}` // Xoá vĩnh viễn
+        : `/products/delete/${id}`; // Xoá vào thùng rác
 
-      console.log(res)
+      const res = await API.delete(url);
+
+      fetchAPI();
+    } catch (err) {
+      setErrorServer(true);
     }
-    catch (err) {
+  };
 
+  const handleRestore = async (id = null) => {    
+    try {
+      if (id == null) return;
+      const res = await API.patch(`/products/restore/${id}`);
+
+      await fetchAPI(true);
+    } catch (err) {setErrorServer(true);}
+  };
+
+  const handleOpenTrash = async () => {
+    try {
+      setIsTrash(true);
+      setTitle("Thùng rác");
+      await fetchAPI(true);
+    } catch (err) {
+      setErrorServer(true);
     }
-  }
+  };
+
+  const handleCloseTrash = async () => {
+    try {
+      setIsTrash(false);
+      setTitle("Danh sách sản phẩm");
+      await fetchAPI();
+    } catch (err) {
+      setErrorServer(true);
+    }
+  };
 
   // Lấy dữ liệu
   useEffect(() => {
-    fetchAPI()
+    fetchAPI();
   }, []);
-  
+
+  if (errorServer) {
+    return <HandleServerError></HandleServerError>;
+  }
+
   return (
     <>
-      {console.log("Products: ", products)}
-        {console.log("Categories: ", categories)}
-        {console.log("Brands: ", brands)}
       <Container sx={{}}>
+        <Container sx={{ marginTop: "5%", marginBottom: "5%" }}>
+          <Typography gutterBottom variant="h2" component="div">
+            <center>Quản lý sản phẩm: {title} </center>
+          </Typography>
+        </Container>
         {/* Nút thêm sản phẩm */}
+
         <Container>
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            <Grid size={{ xs: 2, sm: 4, md: 6 }}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleOpenDialog()}
-              >
-                Thêm sản phẩm
-              </Button>
-            </Grid>
+            {isTrash == false && (
+              <>
+                <Grid size={{ xs: 2 }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleOpenDialog()}
+                  >
+                    Thêm sản phẩm
+                  </Button>
+                </Grid>
+                <Grid size={{ xs: 2 }}>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => handleOpenTrash()}
+                  >
+                    <Delete></Delete>
+                    Thùng rác
+                  </Button>
+                </Grid>
+              </>
+            )}
+            {isTrash == true && (
+              <>
+                <Grid size={{ xs: 2 }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleCloseTrash()}
+                  >
+                    Quay về
+                  </Button>
+                </Grid>
+              </>
+            )}
           </Grid>
         </Container>
 
@@ -189,7 +269,7 @@ const ProductsManager = () => {
           <Table>
             <TableHead>
               <TableRow>
-              <TableCell>ID</TableCell>
+                <TableCell>ID</TableCell>
                 <TableCell>Tên</TableCell>
                 <TableCell>Loại sản phẩm</TableCell>
                 <TableCell>Hãng</TableCell>
@@ -206,12 +286,22 @@ const ProductsManager = () => {
                   <TableCell>{prod.brand.name}</TableCell>
                   <TableCell>{prod.price}</TableCell>
                   <TableCell align="right">
-                    <IconButton onClick={() => handleOpenDialog(prod)}>
-                      <Edit />
-                    </IconButton>
-                    <IconButton onClick={() => handleDelete(prod._id)}>
+                    {isTrash == false && (
+                      <IconButton onClick={() => handleOpenDialog(prod)}>
+                        <Edit />
+                      </IconButton>
+                    )}
+                   {isTrash == true && (
+                      <>
+                        <IconButton onClick={() => handleRestore(prod._id)}>
+                          <RestoreIcon color="primary"/>
+                        </IconButton>
+                      </>
+                    )}
+                    <IconButton onClick={() => handleDelete(prod._id, isTrash)}>
                       <Delete color="error" />
                     </IconButton>
+
                   </TableCell>
                 </TableRow>
               ))}
@@ -255,7 +345,7 @@ const ProductsManager = () => {
               fullWidth
               name="price"
               type="number"
-              value={formData.price}  
+              value={formData.price}
               onChange={handleChange}
               error={!!formErrors.price}
               helperText={formErrors.price}
@@ -318,9 +408,7 @@ const ProductsManager = () => {
                   setFormData({ ...formData, images: newImages });
                 }}
               />
-            )) || console.log("K: ", formData.images)}
-            {/* {console.log("Form Data: ", formData)} */}
-            {console.log("Editing products: ", editingProduct)}
+            ))}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog}>Huỷ</Button>
