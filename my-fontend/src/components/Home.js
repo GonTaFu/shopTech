@@ -121,7 +121,7 @@ export default function Home() {
           WebkitTextFillColor: "transparent",
         }}
       >
-        THÁNG 3 CỘNG NỢI - THÁNG ĐỔI 1️⃣0️⃣
+        THÁNG 3 CỘNG NỢI - THÁNG ĐỔI 10
       </Typography>
       <Typography
         align="center"

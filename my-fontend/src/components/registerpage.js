@@ -1,17 +1,62 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid2';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import TextField from '@mui/material/TextField';
+'use client';
+import React, { useState } from 'react';
+import {
+  Box, Paper, Grid, Typography, Button, Divider, TextField
+} from '@mui/material';
 import { useRouter } from 'next/navigation';
-
-
 
 export default function RegisterPage() {
   const router = useRouter();
+
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const [error, setError] = useState('');
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleRegister = async () => {
+    const { name, email, password, confirmPassword } = form;
+
+    if (!name || !email || !password || !confirmPassword) {
+      return setError('Vui lòng nhập đầy đủ thông tin.');
+    }
+
+    if (password !== confirmPassword) {
+      return setError('Mật khẩu xác nhận không khớp.');
+    }
+
+    try {
+      const res = await fetch('http://localhost:4000/api/accounts/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          emailAddress: email, // Sử dụng email từ form.email
+          password,
+          phoneNumber: '0000000000', // Có thể cho người dùng nhập hoặc mặc định
+          roleId: 'user', // Mặc định là user
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        return setError(data.message || 'Đăng ký thất bại');
+      }
+
+      alert('Đăng ký thành công!');
+      router.push('/account'); // Điều hướng sang trang đăng nhập
+    } catch (err) {
+      setError('Lỗi khi gửi yêu cầu đăng ký');
+    }
+  };
 
   return (
     <Box display='flex' justifyContent='center' alignItems='center' minHeight='100vh'>
@@ -22,40 +67,65 @@ export default function RegisterPage() {
         <Divider sx={{ mb: 3 }} />
         <Grid container spacing={2} direction='column'>
           <Grid item>
-            <TextField label='Họ và tên' variant='outlined' fullWidth />
+            <TextField
+              name='name'
+              label='Họ và tên'
+              variant='outlined'
+              fullWidth
+              value={form.name}
+              onChange={handleChange}
+            />
           </Grid>
           <Grid item>
-            <TextField label='Email' variant='outlined' fullWidth />
+            <TextField
+              name='email'
+              label='Email'
+              variant='outlined'
+              fullWidth
+              value={form.email}
+              onChange={handleChange}
+            />
           </Grid>
           <Grid item>
-            <TextField label='Mật khẩu' type='password' variant='outlined' fullWidth />
+            <TextField
+              name='password'
+              label='Mật khẩu'
+              type='password'
+              variant='outlined'
+              fullWidth
+              value={form.password}
+              onChange={handleChange}
+            />
           </Grid>
           <Grid item>
-            <TextField label='Xác nhận mật khẩu' type='password' variant='outlined' fullWidth />
+            <TextField
+              name='confirmPassword'
+              label='Xác nhận mật khẩu'
+              type='password'
+              variant='outlined'
+              fullWidth
+              value={form.confirmPassword}
+              onChange={handleChange}
+            />
           </Grid>
+          {error && (
+            <Grid item>
+              <Typography color='error'>{error}</Typography>
+            </Grid>
+          )}
           <Grid item>
-            <Button variant='contained' color='primary' fullWidth>
+            <Button variant='contained' color='primary' fullWidth onClick={handleRegister}>
               Đăng ký
             </Button>
           </Grid>
           <Grid item>
-            <Typography variant='body2' color='primary' sx={{ textAlign: 'middle' }}>
+            <Typography variant='body2' color='primary'>
               Đã có tài khoản?
             </Typography>
           </Grid>
           <Grid item>
-            <Button variant='outlined' color='secondary' fullWidth>
+            <Button variant='outlined' color='secondary' fullWidth onClick={() => router.push('/account')}>
               Đăng nhập
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button variant='contained' color='secondary' fullWidth>
-              Đăng nhập với Google
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button variant='contained' color='secondary' fullWidth>
-              Đăng nhập với Facebook
             </Button>
           </Grid>
         </Grid>

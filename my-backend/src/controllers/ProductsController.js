@@ -2,6 +2,10 @@ var mongoose = require("mongoose");
 var Products = require("../models/ProductsModel");
 var Categories = require("../models/CategoriesModel");
 var Brands = require("../models/BrandsModel");
+var mongoose = require("mongoose");
+var Products = require("../models/ProductsModel");
+var Categories = require("../models/CategoriesModel");
+var Brands = require("../models/BrandsModel");
 
 class ProductsController {
   // Read

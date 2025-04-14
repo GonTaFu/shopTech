@@ -56,7 +56,16 @@ router.get("/brands/:id", brandsController.getById);
 // Get al
 router.get("/brands", brandsController.getAll);
 
-// Keep the root route
+// Account
+router.post("/accounts/add", accountsController.addAccount);
+router.put("/accounts/update/:id", accountsController.updateAccount);
+router.delete("/accounts/delete/:id", accountsController.deleteAccount);
+router.get("/accounts", accountsController.getAll);
+router.get("/accounts/:id", accountsController.getById);
+router.post("/accounts/login", accountsController.login);
+
+
+// 
 router.get("/", (req, res) => {
   return res.json({ message: "This is API" });
 });

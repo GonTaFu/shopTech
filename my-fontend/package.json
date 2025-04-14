@@ -11,14 +11,20 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^7.0.2",
-    "@mui/material": "^7.0.2",
-    "@mui/system": "^7.0.2",
+    "@mui/icons-material": "^6.4.11",
+    "@mui/material": "^6.4.11",
+    "@mui/styled-engine-sc": "^6.4.6",
     "axios": "^1.8.4",
-    "lucide-react": "^0.486.0",
-    "next": "^15.2.5",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "icons-material": "^0.0.1-security",
+    "js-cookie": "^3.0.5",
+    "next": "^15.2.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.55.0",
+    "router": "^2.2.0",
+    "styled-components": "^6.1.15"
   },
   "devDependencies": {
     "@types/node": "22.14.0",

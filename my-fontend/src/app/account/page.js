@@ -7,7 +7,7 @@ import { Container } from "@mui/material"
 export default function AccountPage() {
   return (
     <Container>
-       <LoginPage></LoginPage>
+      <LoginPage></LoginPage>
     </Container>
   )
 }
