@@ -1,28 +1,51 @@
-"use client"
-import Image from "next/image";
-
+"use client";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import ProductDetail from "../../../components/ProductDetail";
+import HandleLoading from "../../../components/HandleLoading";
+import HandleServerError from "../../../components/HandleServerError";
 
-const product = {
-  id:"WH1000XM4",
-  name: "Premium Wireless Headphones",
-  description: "Experience premium sound quality and industry-leading noise cancellation with these wireless headphones. Perfect for music lovers and frequent travelers.",
-  price: "349.99",
-  rate: 4,
-  images: [
-    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxfHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080",
-    "https://images.unsplash.com/photo-1528148343865-51218c4a13e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080",
-  ],
-  brand: "Logitech",
-  status: "New",
-  color: "Black",
-  warranty: "24 Months",
-}
+import API from "../../../utils/api";
 
-export default function Home() {
-  return (
-    <div>
-      <ProductDetail product={product}></ProductDetail>
-    </div>
-  );
+export default function Page() {
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [error, setError] = useState(false);
+
+  const fetchAPI = async () => {
+    if (!id) return;
+
+    try {
+      const res = await API.get(`products/${id}`);
+
+      const product = await res.data;
+
+      if (res.status != 200) {
+        setError(true);
+        return;
+      }
+      console.log(res);
+
+      setProduct(product);
+      setError(false);
+    }
+    catch (err) {
+      setError(true);
+    }
+  }
+
+  useEffect(() => {
+    if (!id) return;
+    
+    fetchAPI();
+  }, [id]);
+
+  // Hiển thị lỗi server
+  if (error) return <HandleServerError/>;
+
+  // Hiển thị loading trong khi chờ
+  if (!product) return <center><HandleLoading></HandleLoading></center>;
+
+  // Nếu dữ liệu hợp lệ thì hiển thị chi tiết
+  return <ProductDetail product={product} />;
 }

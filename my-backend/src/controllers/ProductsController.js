@@ -8,13 +8,27 @@ class ProductsController {
   // Lấy tất cả sản phẩm (có populate danh mục + thương hiệu nếu có ref)
   async getAll(req, res) {
     try {
-      const products = await Products.find()
-        .populate("categories_id")
+      const products = await Products.find({ show: true })
+        .populate("category")
         .populate("brand");
 
       res.status(200).json(products);
     } catch (error) {
       res.status(500).json({ message: "Error fetching products", error });
+    }
+  }
+
+  async getTrash(req, res) {
+    try {
+      const products = await Products.find({ show: false })
+        .populate("category")
+        .populate("brand");
+
+      return res.status(200).json(products);
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: "Error fetching products", error });
     }
   }
 
@@ -37,17 +51,9 @@ class ProductsController {
   // Create
   async addProduct(req, res) {
     try {
-      const { name, description, price, categories_id, brand, images } =
-        req.body;
+      const { name, description, price, category, brand, images, quantity, warranty } = req.body;
 
-      if (
-        !name ||
-        !price ||
-        !categories_id ||
-        !images ||
-        !description ||
-        !brand
-      ) {
+      if (!name || !price || !category || !images || !description || !brand || !quantity || !warranty) {
         return res.status(400).json({ message: "Missing required fields" });
       }
 
@@ -58,9 +64,11 @@ class ProductsController {
         name,
         description,
         price,
-        categories_id,
+        category,
         brand,
         images,
+        quantity, 
+        warranty,
         show: true,
       });
 
@@ -81,16 +89,21 @@ class ProductsController {
         return res.status(404).json({ message: "Product not found" });
       }
 
-      const { name, description, price, categories_id, brand, images, show } =
-        req.body;
-
+      const { name, description, price, category, brand, images, quantity, warranty } = req.body;
+      
+      if (!name || !price || !category || !images || !description || !brand || !quantity || !warranty) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+      
       product.name = name;
       product.description = description;
       product.price = price;
-      product.categories_id = categories_id;
+      product.category = category;
       product.brand = brand;
       product.images = images;
-      product.show = show;
+      product.quantity = quantity;
+      product.warranty = warranty;
+      product.show = true;
 
       await product.save();
       return res.json({ message: "Update product successfully", product });
@@ -104,21 +117,25 @@ class ProductsController {
   // Delete (Soft delete) & Destroy
   async deleteProduct(req, res) {
     try {
-        const product = await Products.findById(req.params.id);
-    
-        if (!product) {
-          return res.status(404).json({ message: "Product not found" });
-        }
-    
-        product.show = false;
-        await product.save();
-    
-        return res.json({ message: "Product hidden (soft deleted) successfully" });
-      } catch (error) {
-        return res.status(500).json({ error: "Internal Server Error", detail: error.message });
+      const product = await Products.findById(req.params.id);
+
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
       }
+
+      product.show = false;
+      await product.save();
+
+      return res.json({
+        message: "Product hidden (soft deleted) successfully",
+      });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ error: "Internal Server Error", detail: error.message });
+    }
   }
-  
+
   async destroyProduct(req, res) {
     try {
       const deleted = await Products.findByIdAndDelete(req.params.id);
@@ -129,6 +146,26 @@ class ProductsController {
 
       return res.json({ message: "Delete product successfully" });
     } catch (error) {
+      return res
+        .status(500)
+        .json({ error: "Internal Server Error", detail: error.message });
+    }
+  }
+
+  async restoreProduct(req, res) {
+    try {
+      const product = await Products.findById(req.params.id);
+
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      product.show = true;
+      await product.save();
+
+      return res.json({ message: "Restore product successfully" });
+    }
+    catch (err) {
       return res
         .status(500)
         .json({ error: "Internal Server Error", detail: error.message });
