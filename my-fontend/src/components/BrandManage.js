@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const API_BASE = 'http://localhost:3000/api/brands';
+const API_BASE = 'http://localhost:4000/api/brands';
 
 export default function BrandManagement() {
   const [brands, setBrands] = useState([]);
