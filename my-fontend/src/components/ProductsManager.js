@@ -95,9 +95,9 @@ const ProductsManager = () => {
       setProducts(productsRes.data);
 
       if (
-        brandsRes.status !== 200 ||
-        categoriesRes.status !== 200 ||
-        productsRes.status !== 200
+        brandsRes.status != 200 ||
+        categoriesRes.status != 200 ||
+        productsRes.status != 200
       ) {
         setErrorServer(true);
         return;
@@ -110,17 +110,17 @@ const ProductsManager = () => {
   };
 
   const handleOpenDialog = async (product = null) => {
-    const checkProduct = { ...product };
-    if (checkProduct) {
-      checkProduct.brand = checkProduct.brand?._id || "";
-      checkProduct.category = checkProduct.category?._id || "";
+    const checkPorduct = { ...product };
+    if (checkPorduct) {
+      checkPorduct.brand = checkPorduct.brand?._id || "";
+      checkPorduct.category = checkPorduct.category?._id || "";
     }
 
     setEditingProduct(product);
     if (product == null) {
       setFormData(baseData);
     } else {
-      setFormData(checkProduct);
+      setFormData(checkPorduct);
     }
     setOpenDialog(true);
   };
@@ -217,7 +217,7 @@ const ProductsManager = () => {
   }, []);
 
   if (errorServer) {
-    return <HandleServerError />;
+    return <HandleServerError></HandleServerError>;
   }
 
   return (
@@ -236,9 +236,9 @@ const ProductsManager = () => {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
           >
-            {isTrash === false && (
+            {isTrash == false && (
               <>
-                <Grid item xs={2}>
+                <Grid size={{ xs: 2 }}>
                   <Button
                     variant="contained"
                     color="primary"
@@ -247,21 +247,21 @@ const ProductsManager = () => {
                     Thêm sản phẩm
                   </Button>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid size={{ xs: 2 }}>
                   <Button
                     variant="contained"
                     color="error"
                     onClick={() => handleOpenTrash()}
                   >
-                    <Delete />
+                    <Delete></Delete>
                     Thùng rác
                   </Button>
                 </Grid>
               </>
             )}
-            {isTrash === true && (
+            {isTrash == true && (
               <>
-                <Grid item xs={2}>
+                <Grid size={{ xs: 2 }}>
                   <Button
                     variant="contained"
                     color="primary"
@@ -293,29 +293,32 @@ const ProductsManager = () => {
                 <TableRow key={prod._id}>
                   <TableCell>{prod._id}</TableCell>
                   <TableCell>{prod.name}</TableCell>
-                  <TableCell>{prod.category?.name || "Không có"}</TableCell>
-                  <TableCell>{prod.brand?.name || "Không có"}</TableCell>
+                  <TableCell>{prod.category.name}</TableCell>
+                  <TableCell>{prod.brand.name}</TableCell>
                   <TableCell>{prod.price}</TableCell>
                   <TableCell align="right">
-                    {isTrash === false && (
+                    {isTrash == false && (
                       <IconButton onClick={() => handleOpenDialog(prod)}>
                         <Edit />
                       </IconButton>
                     )}
-                    {isTrash === true && (
-                      <IconButton onClick={() => handleRestore(prod._id)}>
-                        <RestoreIcon color="primary" />
-                      </IconButton>
+                   {isTrash == true && (
+                      <>
+                        <IconButton onClick={() => handleRestore(prod._id)}>
+                          <RestoreIcon color="primary"/>
+                        </IconButton>
+                      </>
                     )}
                     <IconButton onClick={() => handleDelete(prod._id, isTrash)}>
                       <Delete color="error" />
                     </IconButton>
+
                   </TableCell>
                 </TableRow>
               ))}
               {products.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} align="center">
+                  <TableCell colSpan={4} align="center">
                     Chưa có sản phẩm
                   </TableCell>
                 </TableRow>
@@ -325,7 +328,11 @@ const ProductsManager = () => {
         </TableContainer>
 
         {/* Dialog thêm / sửa */}
-        <Dialog open={openDialog} onClose={handleCloseDialog} disableRestoreFocus>
+        <Dialog
+          open={openDialog}
+          onClose={handleCloseDialog}
+          disableRestoreFocus
+        >
           <DialogTitle>
             {editingProduct ? "Chỉnh sửa" : "Thêm"} sản phẩm
           </DialogTitle>
@@ -369,54 +376,78 @@ const ProductsManager = () => {
             <TextField
               required
               margin="dense"
+              label="Thời hạn bảo hành (tháng)"
+              fullWidth
+              name="warranty"
+              type="number"
+              value={formData.warranty}
+              onChange={handleChange}
+              error={!!formErrors.warranty}
+              helperText={formErrors.warranty}
+            />
+            <FormControl fullWidth margin="dense" error={!!formErrors.category}>
+              <InputLabel>Loại sản phẩm</InputLabel>
+              <Select
+                required
+                name="category"
+                value={formData.category || ""}
+                onChange={handleChange}
+                label="Loại sản phẩm"
+              >
+                {categories.map((c) => (
+                  <MenuItem key={c._id} value={c._id}>
+                    {c.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth margin="dense" error={!!formErrors.brand}>
+              <InputLabel>Hãng</InputLabel>
+              <Select
+                required
+                name="brand"
+                value={formData.brand || ""}
+                onChange={handleChange}
+                label="Hãng"
+              >
+                {brands.map((b) => (
+                  <MenuItem key={b._id} value={b._id}>
+                    {b.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <TextField
+              margin="dense"
               label="Mô tả"
               fullWidth
-              name="description"
               multiline
-              rows={4}
+              rows={3}
+              name="description"
               value={formData.description}
               onChange={handleChange}
             />
-            <FormControl fullWidth sx={{ mt: 2 }}>
-              <InputLabel id="brand">Hãng sản phẩm</InputLabel>
-              <Select
-                labelId="brand"
-                value={formData.brand}
-                label="Hãng"
-                onChange={handleChange}
-                name="brand"
-                error={!!formErrors.brand}
-              >
-                {brands.map((brand) => (
-                  <MenuItem value={brand._id} key={brand._id}>
-                    {brand.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl fullWidth sx={{ mt: 2 }}>
-              <InputLabel id="category">Loại sản phẩm</InputLabel>
-              <Select
-                labelId="category"
-                value={formData.category}
-                label="Loại sản phẩm"
-                onChange={handleChange}
-                name="category"
-                error={!!formErrors.category}
-              >
-                {categories.map((category) => (
-                  <MenuItem value={category._id} key={category._id}>
-                    {category.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <Typography sx={{ mt: 2 }}>Ảnh sản phẩm</Typography>
+            {formData.images?.map((img, index) => (
+              <TextField
+                key={index}
+                margin="dense"
+                label={`Ảnh ${index + 1}`}
+                fullWidth
+                name={`image-${index}`}
+                value={img}
+                onChange={(e) => {
+                  const newImages = [...formData.images];
+                  newImages[index] = e.target.value;
+                  setFormData({ ...formData, images: newImages });
+                }}
+              />
+            ))}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseDialog} color="primary">
-              Hủy
-            </Button>
-            <Button onClick={handleSave} color="primary">
+            <Button onClick={handleCloseDialog}>Huỷ</Button>
+            <Button onClick={handleSave} variant="contained">
               Lưu
             </Button>
           </DialogActions>

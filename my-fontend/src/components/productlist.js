@@ -71,9 +71,9 @@ const ProductList = () => {
         {products.map((product) => (
           <Grid item key={product._id} xs={12} sm={6} md={4} lg={3} xl={2}>
             <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
-              <CardMedia>
+              {/* <CardMedia>
                 <Image
-                  src={product.images?.[0] || "/images/default.jpg"} // fallback nếu không có hình
+                  src={product.images?.[0]}
                   alt={product.name}
                   width={250}
                   height={200}
@@ -84,7 +84,15 @@ const ProductList = () => {
                     borderRadius: "8px",
                   }}
                 />
-              </CardMedia>
+              </CardMedia> */}
+
+              <CardMedia
+                component="img"
+                height="194"
+                image= {product.images?.[0] || "images/default.jpg"}
+                alt="Đồ công nghệ gì đó"
+              />
+
               <CardContent>
                 <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                   {product.name}
