@@ -7,10 +7,10 @@ var ProductsSchema = new Schema({
     name: String,
     description: String,
     price: Number,
-    categories_id: [{
+    categories_id:{
         type: String,
         ref: 'Categories'
-    }],
+    },
     brand: {
         type: String,
         ref: 'Brands'
