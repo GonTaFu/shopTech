@@ -186,11 +186,10 @@ export default function CategoryManagement() {
   const [categoryToDelete, setCategoryToDelete] = useState(null);
   const [openSnackbar, setOpenSnackbar] = useState(false); // Thêm state cho Snackbar
 
-<<<<<<< HEAD
+
   const API_URL = "http://localhost:3000/api";
-=======
-  const API_URL = "http://localhost:4000/api"; // Connects to back-end
->>>>>>> 30e6c4e909dbaae2e20635ebcfe49160168d85f4
+
+
 
   useEffect(() => {
     const fetchCategories = async () => {

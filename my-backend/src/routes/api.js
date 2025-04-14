@@ -20,7 +20,7 @@ router.get("/products/:id", productsController.getById);
 router.get("/products", productsController.getAll);
 
 // Categories
-<<<<<<< HEAD
+
 router.post("/categories", categoriesController.createCategory);
 router.put("/categories/:id", categoriesController.updateCategory);
 router.delete("/categories/:id", categoriesController.deleteCategory);
@@ -32,17 +32,6 @@ router.get("/orders", ordersController.getAllOrders);
 router.post("/orders", ordersController.createOrder);
 router.put("/orders/:id", ordersController.updateOrder);
 router.delete("/orders/:id", ordersController.deleteOrder);
-=======
-// Add - Create
-router.post("/categories", categoriesController.createCategory); // Changed from "/categories/add" and "AddCatagory"
-// Update
-router.put("/categories/:id", categoriesController.updateCategory); // Matches "updateCategory"
-// Delete
-router.delete("/categories/:id", categoriesController.deleteCategory); // Matches "deleteCategory"
-// Get - Read
-router.get("/categories/:id", categoriesController.getCategoryById); // Added to match "getCategoryById"
-router.get("/categories", categoriesController.getAllCategories); // Changed from "GetCategories"
->>>>>>> 30e6c4e909dbaae2e20635ebcfe49160168d85f4
 
 // Brands
 // Add - Create
