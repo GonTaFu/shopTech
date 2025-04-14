@@ -19,15 +19,12 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText,
   DialogActions,
-  Snackbar,
-  Alert, // Thêm Alert cho Snackbar
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { Edit, Trash2, Plus, Save, X } from "lucide-react";
 
-// Styled Components (giữ nguyên)
+// Styled Components (unchanged, included for completeness)
 const StyledContainer = styled(Container)(({ theme }) => ({
   paddingTop: theme.spacing(4),
   paddingBottom: theme.spacing(4),
@@ -182,14 +179,8 @@ export default function CategoryManagement() {
     _id: null,
     name: "",
   });
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [categoryToDelete, setCategoryToDelete] = useState(null);
-  const [openSnackbar, setOpenSnackbar] = useState(false); // Thêm state cho Snackbar
 
-
-  const API_URL = "http://localhost:3000/api";
-
-
+  const API_URL = "http://localhost:4000/api"; // Connects to back-end
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -219,25 +210,11 @@ export default function CategoryManagement() {
     setOpenDialog(true);
   };
 
-  const handleOpenDeleteDialog = (category) => {
-    setCategoryToDelete(category);
-    setOpenDeleteDialog(true);
-  };
-
-  const handleCloseDeleteDialog = () => {
-    setOpenDeleteDialog(false);
-    setCategoryToDelete(null);
-  };
-
-  const handleDelete = async () => {
+  const handleDelete = async (_id) => {
     try {
-      const response = await axios.delete(
-        `${API_URL}/categories/${categoryToDelete._id}`
-      );
+      const response = await axios.delete(`${API_URL}/categories/${_id}`);
       if (response.data.success) {
-        setCategories((prev) =>
-          prev.filter((cat) => cat._id !== categoryToDelete._id)
-        );
+        setCategories((prev) => prev.filter((cat) => cat._id !== _id));
       } else {
         console.error("Failed to delete category:", response.data.message);
         alert(response.data.message);
@@ -246,16 +223,11 @@ export default function CategoryManagement() {
       console.error("Error deleting category:", error);
       alert("An error occurred while deleting the category.");
     }
-    handleCloseDeleteDialog();
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setCurrentCategory({ _id: null, name: "" });
-  };
-
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
   };
 
   const handleInputChange = (e) => {
@@ -288,7 +260,6 @@ export default function CategoryManagement() {
         });
         if (response.data.success) {
           setCategories((prev) => [...prev, response.data.data]);
-          setOpenSnackbar(true); // Hiển thị thông báo "Thêm thành công"
         } else {
           console.error("Failed to create category:", response.data.message);
           alert(response.data.message);
@@ -378,9 +349,7 @@ export default function CategoryManagement() {
                   >
                     <Edit size={18} color="#0288d1" />
                   </StyledIconButton>
-                  <DeleteIconButton
-                    onClick={() => handleOpenDeleteDialog(category)}
-                  >
+                  <DeleteIconButton onClick={() => handleDelete(category._id)}>
                     <Trash2 size={18} color="#ef5350" />
                   </DeleteIconButton>
                 </TableCell>
@@ -390,7 +359,6 @@ export default function CategoryManagement() {
         </Table>
       </StyledTableContainer>
 
-      {/* Dialog thêm/sửa danh mục */}
       <StyledDialog
         open={openDialog}
         onClose={handleCloseDialog}
@@ -450,82 +418,6 @@ export default function CategoryManagement() {
           </SaveButton>
         </DialogActions>
       </StyledDialog>
-
-      {/* Dialog xác nhận xóa danh mục */}
-      <StyledDialog
-        open={openDeleteDialog}
-        onClose={handleCloseDeleteDialog}
-        fullWidth
-        maxWidth="sm"
-      >
-        <DialogTitle
-          sx={{
-            background: "linear-gradient(90deg, #d32f2f 30%, #ef5350 90%)",
-            color: "#fff",
-            fontWeight: "bold",
-            fontSize: "1.25rem",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "16px 24px",
-            borderTopLeftRadius: "12px",
-            borderTopRightRadius: "12px",
-          }}
-        >
-          Xác nhận xóa
-          <IconButton onClick={handleCloseDeleteDialog} sx={{ color: "#fff" }}>
-            <X size={20} />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent sx={{ padding: "24px" }}>
-          <DialogContentText sx={{ color: "#424242", fontSize: "1.1rem" }}>
-            Bạn có chắc chắn muốn xóa danh mục{" "}
-            <strong>{categoryToDelete?.name}</strong>? Hành động này không thể
-            hoàn tác.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions
-          sx={{ padding: "16px 24px", backgroundColor: "#fafafa" }}
-        >
-          <CancelButton
-            variant="outlined"
-            onClick={handleCloseDeleteDialog}
-            startIcon={<X size={20} />}
-          >
-            Hủy
-          </CancelButton>
-          <StyledButton
-            variant="contained"
-            onClick={handleDelete}
-            sx={{
-              background: "linear-gradient(90deg, #d32f2f 30%, #ef5350 90%)",
-              color: "#fff",
-              "&:hover": {
-                background: "linear-gradient(90deg, #c62828 30%, #e53935 90%)",
-              },
-            }}
-            startIcon={<Trash2 size={20} />}
-          >
-            Xóa
-          </StyledButton>
-        </DialogActions>
-      </StyledDialog>
-
-      {/* Snackbar thông báo thêm thành công */}
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000} // Tự đóng sau 3 giây
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }} // Hiển thị ở trên cùng giữa màn hình
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Thêm thành công!
-        </Alert>
-      </Snackbar>
     </StyledContainer>
   );
 }
