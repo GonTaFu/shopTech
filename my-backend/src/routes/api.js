@@ -33,6 +33,17 @@ router.post("/orders", ordersController.createOrder);
 router.put("/orders/:id", ordersController.updateOrder);
 router.delete("/orders/:id", ordersController.deleteOrder);
 
+
+// // Add - Create
+// router.post("/categories", categoriesController.createCategory); // Changed from "/categories/add" and "AddCatagory"
+// // Update
+// router.put("/categories/:id", categoriesController.updateCategory); // Matches "updateCategory"
+// // Delete
+// router.delete("/categories/:id", categoriesController.deleteCategory); // Matches "deleteCategory"
+// // Get - Read
+// router.get("/categories/:id", categoriesController.getCategoryById); // Added to match "getCategoryById"
+// router.get("/categories", categoriesController.getAllCategories); // Changed from "GetCategories"
+
 // Brands
 // Add - Create
 router.post("/brands/add", brandsController.create);
