@@ -1,6 +1,6 @@
-// src/middlewares/auth.js
 const jwt = require("jsonwebtoken");
 
+// Middleware xác thực token
 const authenticate = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -11,6 +11,7 @@ const authenticate = (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
+    // Giải mã token và lưu thông tin user vào req.user
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded; // chứa { userId, roleId }
     next();
@@ -19,10 +20,11 @@ const authenticate = (req, res, next) => {
   }
 };
 
-// Middleware phân quyền theo vai trò
-const authorize = (roles = [Admin]) => {
+// Middleware phân quyền theo vai trò (chỉ cho phép admin truy cập)
+const authorize = (roles = []) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.roleId)) {
+    // Nếu danh sách roles không rỗng và role người dùng không có trong danh sách, từ chối quyền truy cập
+    if (roles.length && !roles.includes(req.user.roleId)) {
       return res.status(403).json({ message: "Bạn không có quyền truy cập." });
     }
     next();
