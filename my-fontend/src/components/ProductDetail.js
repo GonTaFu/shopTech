@@ -4,9 +4,6 @@ import * as React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Container } from "@mui/system";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import Rating from "@mui/material/Rating";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 import {
   Card,
@@ -26,16 +23,15 @@ import {
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-// import Grid from "@mui/material/Grid";
-import Link from "next/link";
 
 import { addToCart } from "../utils/cart";
+import {notifySuccess, NotifyContainer} from "../utils/notify"
 
 const TableProductDetail = ({ product }) => {
   const displayData = {
     ID: product._id,
     Name: product.name,
-    Price: product.price,
+    Price: `${product.price.toLocaleString()} VNĐ`,
     Brand: product.brand?.name || "",
     Category: product.category?.name || "",
     Quantity: product.quantity,
@@ -64,39 +60,15 @@ const TableProductDetail = ({ product }) => {
 const ProductDetail = ({ product }) => {
   const data_table = { ...product };
 
-  const notify = () => {
-    return toast.success("Đã thêm sản phẩm vào giỏ hàng", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-    });
-  };
-
   const handleAddToCart = () => {
     addToCart(product._id, 1);
-    notify();
+    notifySuccess("Đã thêm sản phẩm vào giỏ hàng");
   };
 
   return (
     <>
       <Container sx={{ py: 4 }} maxWidth="md">
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick={false}
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-        />
+        <NotifyContainer/>
         <CssBaseline />
         <Box sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}>
           <Grid
@@ -123,10 +95,7 @@ const ProductDetail = ({ product }) => {
                 </Typography>
                 {/* <Rating name="read-only" value={product.rate} readOnly /> */}
                 <Typography gutterBottom variant="h8" component="div">
-                  {new Intl.NumberFormat("vi-VN", {
-                    style: "currency",
-                    currency: "VND",
-                  }).format(product.price)}
+                  {product.price.toLocaleString()} VNĐ
                 </Typography>
                 <Typography variant="h8" component="div">
                   Thương hiệu: {product.brand.name}
@@ -141,28 +110,40 @@ const ProductDetail = ({ product }) => {
                   Bảo hành: {product.warranty} Tháng
                 </Typography>
               </CardContent>
-              <CardActions bgcolor="text.disabled">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  fullWidth
+              {product.quantity > 0 && (
+                <>
+                  <CardActions bgcolor="text.disabled">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      fullWidth
+                      href="/cart"
+                      onClick={handleAddToCart}
+                    >
+                      Buy Now
+                    </Button>
+                  </CardActions>
+                  <CardActions bgcolor="text.disabled">
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      size="large"
+                      fullWidth
+                      startIcon={<FavoriteBorderIcon />}
+                      onClick={handleAddToCart}
+                    >
+                      Add to cart
+                    </Button>
+                  </CardActions>
+                </>
+              ) || (
+                <Box component="section"
+                sx={{ p: 2, border: '1px dashed grey'}}
                 >
-                  Buy Now
-                </Button>
-              </CardActions>
-              <CardActions bgcolor="text.disabled">
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  size="large"
-                  fullWidth
-                  startIcon={<FavoriteBorderIcon />}
-                  onClick={handleAddToCart}
-                >
-                  Add to cart
-                </Button>
-              </CardActions>
+                  <Typography variant="h5"><center>Sản phẩm đã hết</center></Typography>
+                </Box>
+              )}
             </Grid>
           </Grid>
         </Box>
