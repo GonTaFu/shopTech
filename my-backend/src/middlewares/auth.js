@@ -20,7 +20,7 @@ const authenticate = (req, res, next) => {
 };
 
 // Middleware phân quyền theo vai trò
-const authorize = (roles = []) => {
+const authorize = (roles = [Admin]) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.roleId)) {
       return res.status(403).json({ message: "Bạn không có quyền truy cập." });
