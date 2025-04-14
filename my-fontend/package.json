@@ -16,9 +16,11 @@
     "@mui/system": "^7.0.2",
     "axios": "^1.8.4",
     "lucide-react": "^0.486.0",
+    "my-app": "file:",
     "next": "^15.2.5",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@types/node": "22.14.0",

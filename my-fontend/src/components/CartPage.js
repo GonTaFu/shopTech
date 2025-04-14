@@ -1,22 +1,46 @@
 "use client";
 import * as React from 'react';
+import { useEffect, useState } from "react";
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import MyFooter from './MyFooter'; // Import Footer
 
-const cartItems = [
-  { id: 1, name: 'Sản phẩm A', price: 200000, image: '1.png', quantity: 1 },
-  { id: 2, name: 'Sản phẩm B', price: 150000, image: '2.png', quantity: 2 }
-];
+import {getCart} from "../utils/cart";
+import API from '../utils/api';
 
 const Cart = () => {
-  const totalAmount = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const [products, setProducts] = useState([]);
 
+  const totalAmount = products.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const loadCart = async () => {
+    const cart = getCart();
+    const res = await Promise.all(cart.map(item => API.get(`/products/${item.productId}`)));
+
+    res.map((r) => {
+      delete r.data.quantity;
+      delete r.data.__v;
+      delete r.data.show;
+    });
+
+    const fullProducts = res.map((res, index) => ({ 
+      ...res.data,
+      quantity: cart[index].quantity,
+    }));
+
+    console.log(fullProducts);
+    setProducts(prev => fullProducts);
+  }
+
+  useEffect(() => {
+    loadCart();
+  }, []);
+  
   return (
+    
     <Box 
       sx={{
         display: 'flex', 
@@ -30,9 +54,9 @@ const Cart = () => {
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={8}>
-            {cartItems.map((item) => (
-              <Paper key={item.id} sx={{ display: 'flex', alignItems: 'center', p: 2, mb: 2, borderRadius: 2, boxShadow: 3 }}>
-                <img src={item.image} width="100" alt={item.name} style={{ borderRadius: 8, marginRight: 16 }} />
+            {products.map((item) => (
+              <Paper key={item._id} sx={{ display: 'flex', alignItems: 'center', p: 2, mb: 2, borderRadius: 2, boxShadow: 3 }}>
+                <img src={item.images[0]} width="100" alt={item.name} style={{ borderRadius: 8, marginRight: 16 }} />
                 <Box>
                   <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{item.name}</Typography>
                   <Typography sx={{ color: 'gray' }}>Giá: {item.price.toLocaleString()} VND</Typography>

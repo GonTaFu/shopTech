@@ -24,7 +24,7 @@ export default function Page() {
         setError(true);
         return;
       }
-      console.log(res);
+      console.log(res); 
 
       setProduct(product);
       setError(false);

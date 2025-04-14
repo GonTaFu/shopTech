@@ -1,10 +1,12 @@
-"use client"
+"use client";
 // src/components/ProductDetail.js
 import * as React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Container } from "@mui/system";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Rating from "@mui/material/Rating";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
   Card,
@@ -27,6 +29,8 @@ import Grid from "@mui/material/Grid";
 // import Grid from "@mui/material/Grid";
 import Link from "next/link";
 
+import { addToCart } from "../utils/cart";
+
 const TableProductDetail = ({ product }) => {
   const displayData = {
     ID: product._id,
@@ -35,7 +39,7 @@ const TableProductDetail = ({ product }) => {
     Brand: product.brand?.name || "",
     Category: product.category?.name || "",
     Quantity: product.quantity,
-    Warranty: `${product.warranty} Tháng`
+    Warranty: `${product.warranty} Tháng`,
   };
   return (
     <TableContainer>
@@ -59,11 +63,40 @@ const TableProductDetail = ({ product }) => {
 
 const ProductDetail = ({ product }) => {
   const data_table = { ...product };
-  
+
+  const notify = () => {
+    return toast.success("Đã thêm sản phẩm vào giỏ hàng", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+  };
+
+  const handleAddToCart = () => {
+    addToCart(product._id, 1);
+    notify();
+  };
 
   return (
     <>
       <Container sx={{ py: 4 }} maxWidth="md">
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
         <CssBaseline />
         <Box sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}>
           <Grid
@@ -90,7 +123,10 @@ const ProductDetail = ({ product }) => {
                 </Typography>
                 {/* <Rating name="read-only" value={product.rate} readOnly /> */}
                 <Typography gutterBottom variant="h8" component="div">
-                {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(product.price)}
+                  {new Intl.NumberFormat("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  }).format(product.price)}
                 </Typography>
                 <Typography variant="h8" component="div">
                   Thương hiệu: {product.brand.name}
@@ -122,6 +158,7 @@ const ProductDetail = ({ product }) => {
                   size="large"
                   fullWidth
                   startIcon={<FavoriteBorderIcon />}
+                  onClick={handleAddToCart}
                 >
                   Add to cart
                 </Button>
