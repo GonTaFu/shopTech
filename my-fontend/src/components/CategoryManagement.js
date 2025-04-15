@@ -24,6 +24,8 @@ import {
 import { styled } from "@mui/system";
 import { Edit, Trash2, Plus, Save, X } from "lucide-react";
 
+import API from "../utils/api";
+
 // Styled Components (unchanged, included for completeness)
 const StyledContainer = styled(Container)(({ theme }) => ({
   paddingTop: theme.spacing(4),
@@ -180,12 +182,10 @@ export default function CategoryManagement() {
     name: "",
   });
 
-  const API_URL = "http://localhost:4000/api"; // Connects to back-end
-
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${API_URL}/categories`);
+        const response = await API.get(`/categories`);
         if (response.data.success) {
           setCategories(response.data.data);
         } else {
@@ -212,7 +212,7 @@ export default function CategoryManagement() {
 
   const handleDelete = async (_id) => {
     try {
-      const response = await axios.delete(`${API_URL}/categories/${_id}`);
+      const response = await API.delete(`/categories/${_id}`);
       if (response.data.success) {
         setCategories((prev) => prev.filter((cat) => cat._id !== _id));
       } else {
@@ -239,8 +239,8 @@ export default function CategoryManagement() {
     e.preventDefault();
     try {
       if (isEditing) {
-        const response = await axios.put(
-          `${API_URL}/categories/${currentCategory._id}`,
+        const response = await API.put(
+          `/categories/${currentCategory._id}`,
           { name: currentCategory.name }
         );
         if (response.data.success) {
@@ -255,7 +255,7 @@ export default function CategoryManagement() {
           return;
         }
       } else {
-        const response = await axios.post(`${API_URL}/categories`, {
+        const response = await API.post(`/categories`, {
           name: currentCategory.name,
         });
         if (response.data.success) {

@@ -6,7 +6,7 @@ import { Typography } from "@mui/material";
 async function fetchOrderById(orderId) {
   try {
     const response = await fetch(
-      `http://localhost:4000/api/orders?id=${orderId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/orders?id=${orderId}`,
       {
         cache: "no-store",
       }
@@ -72,7 +72,7 @@ export default async function Page({ params }) {
     try {
       order = await fetchOrderById(orderId);
     } catch (err) {
-      error = `Failed to load order: ${err.message}. Please ensure the backend is running on http://localhost:4000 and the /api/orders?id=${orderId} endpoint is accessible.`;
+      error = `Failed to load order: ${err.message}. Please ensure the backend is running on ${process.env.NEXT_PUBLIC_API_URL} and the /api/orders?id=${orderId} endpoint is accessible.`;
     }
   }
 

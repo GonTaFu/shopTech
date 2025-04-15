@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const API_BASE = 'http://localhost:4000/api/brands';
+import API from "../utils/api";
 
 export default function BrandManagement() {
   const [brands, setBrands] = useState([]);
@@ -21,7 +21,7 @@ export default function BrandManagement() {
   // Hàm lấy toàn bộ brand
   const fetchBrands = async () => {
     try {
-      const res = await axios.get(API_BASE);
+      const res = await API.get('/brands');
       setBrands(res.data);
     } catch (error) {
       console.error('Lỗi khi tải dữ liệu:', error);
@@ -32,7 +32,7 @@ export default function BrandManagement() {
   const handleAddBrand = async () => {
     if (!newBrandName.trim()) return;
     try {
-      const res = await axios.post(`${API_BASE}/add`, { name: newBrandName });
+      const res = await API.post(`/brands/add`, { name: newBrandName });
       setBrands([...brands, res.data]);
       setNewBrandName('');
     } catch (error) {
@@ -43,7 +43,7 @@ export default function BrandManagement() {
   // Hàm xoá brand
   const handleDeleteBrand = async (id) => {
     try {
-      await axios.delete(`${API_BASE}/delete/${id}`);
+      await API.delete(`/brands/delete/${id}`);
       setBrands(brands.filter(b => b._id !== id));
     } catch (error) {
       console.error('Lỗi khi xoá brand:', error);
