@@ -56,7 +56,7 @@ const Cart = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          minHeight: "80vh", // Chiều cao toàn trang, giúp footer luôn dính đáy
+          marginBottom: "100%"
         }}
       >
         <Box sx={{ flexGrow: 1, p: 3, maxWidth: 900, margin: "auto" }}>
@@ -68,41 +68,20 @@ const Cart = () => {
             Giỏ Hàng
           </Typography>
           <Grid container spacing={3}>
-            <Grid item xs={8}>
-                <Paper
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    p: 2,
-                    mb: 2,
-                    borderRadius: 2,
-                    boxShadow: 3,
-                  }}
-                >
-                  <Box>
-                    <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                      Giỏ hàng trống
-                    </Typography>
-                  </Box>
-                </Paper>
-            </Grid>
             <Grid item xs={4}>
               <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 3 }}>
                 <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
-                  Tóm tắt đơn hàng
+                  <center>Đơn hàng</center>
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
                 <Typography variant="body1" sx={{ fontSize: 18 }}>
                   Tổng tiền: <b>0 VND</b>
                 </Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  sx={{ mt: 3, py: 1.5, fontSize: 16, fontWeight: "bold" }}
+                <Box component="section"
+                sx={{ mt: 3, py: 1.5, fontSize: 16, fontWeight: "bold", p: 2, border: '1px dashed grey'}}
                 >
-                  Thanh toán
-                </Button>
+                  <Typography variant="h5"><center>Giỏ hàng hiện trống</center></Typography>
+                </Box>
               </Paper>
             </Grid>
           </Grid>
@@ -116,7 +95,7 @@ const Cart = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "80vh", // Chiều cao toàn trang, giúp footer luôn dính đáy
+          marginBottom: "100%"
       }}
     >
       <Box sx={{ flexGrow: 1, p: 3, maxWidth: 900, margin: "auto" }}>
@@ -160,7 +139,7 @@ const Cart = () => {
                   variant="contained"
                   color="error"
                   onClick={() => handleDelete(item._id)}
-                  sx={{ mt: 2, py: 1.5, fontWeight: "bold", margin: 2 }}
+                  sx={{ mt: 2, py: 1.5, fontWeight: "bold", margin: 2}}
                 >
                   Xóa
                 </Button>
@@ -170,7 +149,7 @@ const Cart = () => {
           <Grid item xs={4}>
             <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 3 }}>
               <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
-                Tóm tắt đơn hàng
+              <center>Đơn hàng</center>
               </Typography>
               <Divider sx={{ mb: 2 }} />
               <Typography variant="body1" sx={{ fontSize: 18 }}>
@@ -180,6 +159,7 @@ const Cart = () => {
                 variant="contained"
                 color="primary"
                 fullWidth
+                href="/checkout"
                 sx={{ mt: 3, py: 1.5, fontSize: 16, fontWeight: "bold" }}
               >
                 Thanh toán

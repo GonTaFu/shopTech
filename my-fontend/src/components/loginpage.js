@@ -30,6 +30,8 @@
 
         Cookies.set('token', data.token, { expires: 1 / 24 }); // Cookie tồn tại 1 giờ
         Cookies.set('userName', data.fullName, { expires: 1 / 24 });
+        console.log("User data: ", data);
+        Cookies.set("userID", data.id);
         Cookies.set('role', data.role, { expires: 1 / 24 }); // 🔥 thêm dòng này
         window.dispatchEvent(new Event("user-login"));
 

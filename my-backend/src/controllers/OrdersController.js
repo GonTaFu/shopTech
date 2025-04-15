@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Orders = require("../models/OrdersModel");
+var OrdersDetail = require('../models/OrdersDetailModel'); // cái order detail vẫn chưa được xài
 
 class OrdersController {
   // Get all orders
@@ -35,21 +36,32 @@ class OrdersController {
   // Create a new order
   async createOrder(req, res) {
     try {
-      const newOrder = new Orders(req.body);
-      const savedOrder = await newOrder.save();
-      // Populate accountId after saving
-      const populatedOrder = await Orders.findById(savedOrder._id)
-        .populate("accountId", "name")
-        .exec();
-      return res.status(201).json({
-        _id: populatedOrder._id,
-        accountId: populatedOrder.accountId?._id || "Unknown",
-        total_price: populatedOrder.total_price,
-        status: populatedOrder.status,
-        order_date: "N/A",
-        payment: "N/A",
-        billing_name: populatedOrder.accountId?.name || "Unknown",
+      const {name, accountId, status, payment, phoneNumber, address, order_detail} = req.body;
+      var id = await new mongoose.Types.ObjectId().toString();
+      var newOrder = new Orders({
+        _id: id,
+        name: name,
+        phoneNumber: phoneNumber,
+        address: address,
+        accountId: accountId,
+        status: status,
+        payment: payment,
       });
+
+      await newOrder.save();
+
+      order_detail.map(async (order) => {
+        var idDetail =  await new mongoose.Types.ObjectId().toString();
+        var newOrderDetail = new OrdersDetail({
+          _id: idDetail,
+          orderId: id,
+          productId: order.id,
+          quantity: order.quantity,
+        });
+
+        await newOrderDetail.save();
+      })
+      return res.json({ message: "Add product successfully" });
     } catch (error) {
       console.error("Error creating order:", error);
       return res.status(500).json({

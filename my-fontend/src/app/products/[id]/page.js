@@ -20,11 +20,6 @@ export default function Page() {
 
       const product = await res.data;
 
-      if (res.status != 200) {
-        setError(true);
-        return;
-      }
-
       setProduct(product);
       setError(false);
     }

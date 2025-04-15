@@ -38,6 +38,10 @@ export function removeFromCart(productId) {
   saveCart(cart);
 }
 
+export function clearCart() {
+  saveCart([]);
+}
+
 // Cập nhật số lượng
 export function updateQuantity(productId, quantity) {
   const cart = getCart().map(item =>

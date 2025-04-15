@@ -6,7 +6,6 @@ var categoriesController = require("../controllers/CategoriesController");
 var brandsController = require("../controllers/BrandsControllers");
 var accountsController = require("../controllers/AccountsController");
 var ordersController = require("../controllers/OrdersController");
-var ordersDetailController = require("../controllers/OrdersDetailController");
 var { authenticate, authorize } = require("../middlewares/auth");
 
 
