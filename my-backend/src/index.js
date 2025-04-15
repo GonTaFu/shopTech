@@ -8,7 +8,8 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // db
-const uri = "mongodb+srv://gontafu:0931257398sS@shoppingonline.o4qff.mongodb.net/shoppingonline";
+// const uri = "mongodb+srv://gontafu:0931257398sS@shoppingonline.o4qff.mongodb.net/shoppingonline";
+var uri = "mongodb+srv://pikachu123450vn:phuc1234567890@cluster0.4lvmo.mongodb.net/shoppingonline";
 
 var db = mongoose.connect(uri).then(() => console.log("Kết nối thành công với MongoDB Atlas!"))
 

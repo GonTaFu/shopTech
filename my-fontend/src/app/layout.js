@@ -1,3 +1,4 @@
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -24,6 +25,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <AppRouterCacheProvider>
         <header>
           <MyAppBar></MyAppBar>
         </header>
@@ -32,12 +34,10 @@ export default function RootLayout({ children }) {
         }}>
           {children}
         </Box>
-        <footer sx={{
-          margin: 0,
-          padding: 0,
-        }}>
+        <Box component="footer" sx={{ margin: 0, padding: 0 }}>
           <MyFooter></MyFooter>
-        </footer>
+        </Box>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
