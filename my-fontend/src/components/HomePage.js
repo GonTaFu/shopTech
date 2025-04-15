@@ -1,5 +1,5 @@
 import { Box, Container, Typography, Button, Card, CardContent, CardMedia } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const products = [
@@ -14,7 +14,7 @@ const products = [
   { id: 9, name: "Tai nghe Bluetooth", price: "$150", image: "/headphones.jpg" },
 ];
 
-export default function HomePage() {
+export default function HomePageSencond() {
   return (
     <Container>
       {/* Hero Section */}
