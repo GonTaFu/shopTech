@@ -1,5 +1,5 @@
 import { Box, Container, Typography, Button, Card, CardContent, CardMedia } from "@mui/material";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid2";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const products = [
