@@ -15,7 +15,12 @@ import { alpha, styled } from "@mui/material/styles";
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 
+import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
+import StoreMallDirectoryIcon from '@mui/icons-material/StoreMallDirectory';
+
 const StyledToolBar = styled(ToolBar)(({ theme }) => ({
+  height: 60,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -60,6 +65,7 @@ export default function MyAppBar() {
   const handleLogout = () => {
     Cookies.remove('token');
     Cookies.remove('userName');
+    Cookies.remove('userID');
     setUserName('');
     router.push('/account');
   };
@@ -76,19 +82,19 @@ export default function MyAppBar() {
         boxShadow: 0,
         bgcolor: "transparent",
         backgroundImage: "none",
-        mt: 8
+        mt: 4
       }}
     >
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <StyledToolBar variant="dense" disableGutters>
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Button variant="text" color="info" size="small">Features</Button>
-              <Button variant="text" color="info" size="small">Testimonials</Button>
-              <Button variant="text" color="info" size="small">Highlights</Button>
-              <Button variant="text" color="info" size="small">Pricing</Button>
-              <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>FAQ</Button>
-              <Button variant="text" color="info" size="small" sx={{ minWidth: 0 }}>Blog</Button>
+              <Button href="/" variant="text" color="info" startIcon={<StoreMallDirectoryIcon/>}>Home</Button>
+              <Button href="/products" variant="text" color="info" startIcon={<LaptopChromebookIcon/>}>Products</Button>
+              <Button href="/cart" variant="text" color="info" startIcon={<LocalMallIcon/>}>Cart</Button>
+              {/* <Button variant="text" color="info" >Pricing</Button>
+              <Button variant="text" color="info" sx={{ minWidth: 0 }}>FAQ</Button>
+              <Button variant="text" color="info" sx={{ minWidth: 0 }}>Blog</Button> */}
             </Box>
           </Box>
 

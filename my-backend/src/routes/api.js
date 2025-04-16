@@ -6,7 +6,6 @@ var categoriesController = require("../controllers/CategoriesController");
 var brandsController = require("../controllers/BrandsControllers");
 var accountsController = require("../controllers/AccountsController");
 var ordersController = require("../controllers/OrdersController");
-var ordersDetailController = require("../controllers/OrdersDetailController");
 var { authenticate, authorize } = require("../middlewares/auth");
 
 
@@ -29,10 +28,14 @@ router.get("/categories", categoriesController.getAllCategories);
 router.get("/categories/:id", categoriesController.getCategoryById);
 
 // Orders
-router.get("/orders", ordersController.getAllOrders);
+
 router.post("/orders", ordersController.createOrder);
+router.put("/orders/:id/cancel", ordersController.cancelOrder);
 router.put("/orders/:id", ordersController.updateOrder);
 router.delete("/orders/:id", ordersController.deleteOrder);
+router.get("/orders/account/:id", ordersController.getOrdersByAccountId);
+router.get("/orders/:id", ordersController.getOrderById);
+router.get("/orders", ordersController.getAllOrders);
 
 
 // // Add - Create

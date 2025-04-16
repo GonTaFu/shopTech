@@ -100,7 +100,8 @@ class AccountController {
       return res.json({
         token,
         role: account.roleId,
-        fullName: account.name, // 👈 THÊM DÒNG NÀY
+        fullName: account.name,
+        id: account._id,
       });
     } catch (error) {
       return res.status(500).json({ message: "Đăng nhập thất bại", error });

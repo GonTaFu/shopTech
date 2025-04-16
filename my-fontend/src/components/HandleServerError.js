@@ -2,12 +2,12 @@
 import { Container, Typography} from "@mui/material";
 import * as React from "react";
 
-const HandleServerError = () => {
+const HandleServerError = ({ context = "Server Error. 404 not found" }) => {
     return (
         <>
-            <Container sx={{marginTop: "20%", marginBottom: "20%"}}>
-                <Typography gutterBottom variant="h5" component="div">
-                <center>Server Error</center>
+            <Container sx={{marginTop: "25%", marginBottom: "100%"}}>
+                <Typography gutterBottom variant="h4" component="div" fontWeight="bold">
+                <center>Thông báo: {context} </center>
                 </Typography>
             </Container>
         
