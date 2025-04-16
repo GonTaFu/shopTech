@@ -17,6 +17,7 @@ import payment from "./payment";
 import { useRouter } from "next/navigation";
 
 import { getCart, clearCart } from "../utils/cart";
+import { notifyError, NotifyContainer } from "../utils/notify";
 import API from "../utils/api";
 import Cookies from "js-cookie";
 
@@ -34,13 +35,42 @@ const PayPage = () => {
   };
 
   const [formData, setFormData] = useState(baseOrder);
+  const [errorForm, setErrorForm] = useState({});
+
+  const validateFormData = (data) => {
+    const errors = {};
+
+    if (!data.name.trim()) {
+      errors.name = "Tên không được để trống";
+    }
+
+    if (!data.accountId.trim()) {
+      errors.accountId = "Thiếu accountId";
+    }
+
+    if (!data.phoneNumber.trim()) {
+      errors.phoneNumber = "Số điện thoại không được để trống";
+    } else if (!/^\d{10,11}$/.test(data.phoneNumber)) {
+      errors.phoneNumber = "Số điện thoại không hợp lệ";
+    }
+
+    if (!data.address.trim()) {
+      errors.address = "Địa chỉ không được để trống";
+    }
+
+    if (!data.payment.trim()) {
+      errors.payment = "Vui lòng chọn phương thức thanh toán";
+    }
+
+    return errors;
+  };
 
   const fetch = async () => {
     try {
       const id = Cookies.get("userID");
       const name = Cookies.get("userName");
-      if (!id && !name) {
-        router.push('/account');
+      if (!id || !name) {
+        router.push("/account");
         return;
       }
 
@@ -59,7 +89,7 @@ const PayPage = () => {
       }));
     } catch (err) {
       setFormData(baseOrder);
-      console.log("Lỗi hệ thống");
+      notifyError("Lỗi hệ thống");
     }
   };
 
@@ -70,20 +100,24 @@ const PayPage = () => {
 
   const handleCheckOut = async () => {
     try {
+      const errors = validateFormData(formData);
+      if (Object.keys(errors).length > 0) {
+        setErrorForm(errors);
+        notifyError("Thanh toán thất bại");
+        return;
+      }
       const res = await API.post(`/orders`, formData);
 
       if (res.status === 200 || res.status === 201) {
         clearCart();
         setFormData(baseOrder);
         router.push("/cart");
+      } else {
+        notifyError("Thanh toán thất bại");
       }
-      else {
-        console.log("Thanh toán thất bại");
-      }
-
     } catch (err) {
       setFormData(baseOrder);
-      console.log("Lỗi hệ thống");
+      notifyError("Lỗi hệ thống");
     }
   };
 
@@ -93,11 +127,9 @@ const PayPage = () => {
 
   return (
     <>
-    {console.log(formData)}
       {(formData.order_detail.length > 0 && (
         <>
           <Container maxWidth="md" sx={{ mt: 5 }}>
-            {/* {console.log(formData)} */}
             <Typography
               variant="h4"
               sx={{ fontWeight: "bold", textAlign: "center", mb: 3 }}
@@ -118,6 +150,8 @@ const PayPage = () => {
                       variant="outlined"
                       name="name"
                       onChange={handleChange}
+                      error={errorForm.name}
+                      helperText={errorForm.name}
                     />
                     <TextField
                       fullWidth
@@ -125,6 +159,8 @@ const PayPage = () => {
                       variant="outlined"
                       name="phoneNumber"
                       onChange={handleChange}
+                      error={errorForm.phoneNumber}
+                      helperText={errorForm.phoneNumber}
                     />
                     <TextField
                       fullWidth
@@ -132,6 +168,8 @@ const PayPage = () => {
                       variant="outlined"
                       name="address"
                       onChange={handleChange}
+                      error={errorForm.address}
+                      helperText={errorForm.address}
                     />
                   </Grid>
                 </Paper>
@@ -154,13 +192,24 @@ const PayPage = () => {
                       <Autocomplete
                         disablePortal
                         options={payment}
-                        value={payment.find(p => p.value === formData.payment) || null}
+                        value={
+                          payment.find((p) => p.value === formData.payment) ||
+                          null
+                        }
                         onChange={(event, value) => {
-                          setFormData((prev) => ({ ...prev, payment: value?.value || "" }));
+                          setFormData((prev) => ({
+                            ...prev,
+                            payment: value?.value || "",
+                          }));
                         }}
                         sx={{ width: 200 }}
                         renderInput={(params) => (
-                          <TextField {...params} label="Thanh toán bằng" />
+                          <TextField
+                            {...params}
+                            label="Thanh toán bằng"
+                            error={errorForm.payment}
+                            helperText={errorForm.payment}
+                          />
                         )}
                       />
                     </Grid>
@@ -198,6 +247,7 @@ const PayPage = () => {
           </Typography>
         </Container>
       )}
+      <NotifyContainer />
     </>
   );
 };

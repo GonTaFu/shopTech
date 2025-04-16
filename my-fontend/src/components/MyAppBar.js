@@ -18,6 +18,9 @@ import { useRouter } from 'next/navigation';
 import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import StoreMallDirectoryIcon from '@mui/icons-material/StoreMallDirectory';
+import AssignmentSharpIcon from '@mui/icons-material/AssignmentSharp';
+import AccountCircleSharpIcon from '@mui/icons-material/AccountCircleSharp';
+import { Typography } from "@mui/material";
 
 const StyledToolBar = styled(ToolBar)(({ theme }) => ({
   height: 60,
@@ -66,9 +69,16 @@ export default function MyAppBar() {
     Cookies.remove('token');
     Cookies.remove('userName');
     Cookies.remove('userID');
+    Cookies.remove('role');
     setUserName('');
     router.push('/account');
   };
+
+  const handleRouter = (path = "") => {
+    console.log(path)
+    router.push(path);
+    return;
+  }
 
   if (!isClient) {
     return null;
@@ -92,8 +102,8 @@ export default function MyAppBar() {
               <Button href="/" variant="text" color="info" startIcon={<StoreMallDirectoryIcon/>}>Home</Button>
               <Button href="/products" variant="text" color="info" startIcon={<LaptopChromebookIcon/>}>Products</Button>
               <Button href="/cart" variant="text" color="info" startIcon={<LocalMallIcon/>}>Cart</Button>
-              {/* <Button variant="text" color="info" >Pricing</Button>
-              <Button variant="text" color="info" sx={{ minWidth: 0 }}>FAQ</Button>
+              <Button href="/orders" variant="text" color="info" startIcon={<AssignmentSharpIcon/>}>Orders</Button>
+              {/* <Button variant="text" color="info" sx={{ minWidth: 0 }}>FAQ</Button>
               <Button variant="text" color="info" sx={{ minWidth: 0 }}>Blog</Button> */}
             </Box>
           </Box>
@@ -103,7 +113,9 @@ export default function MyAppBar() {
             {userName ? (
               <>
                 <Box sx={{ mr: 2, color: "black" }}>
-                  <strong>Xin chào, {userName}</strong>
+                <Button href="/profile" variant="text" color="black" startIcon={<AccountCircleSharpIcon/>}>
+                  <Typography>Xin chào, {userName}</Typography>
+                </Button>
                 </Box>
                 <Button color="error" variant="text" size="small" onClick={handleLogout}>
                   Đăng xuất
@@ -136,17 +148,29 @@ export default function MyAppBar() {
                     <CloseRoundedIcon />
                   </IconButton>
                 </Box>
-                <MenuItem>Features</MenuItem>
-                <MenuItem>Testimonials</MenuItem>
-                <MenuItem>Highlights</MenuItem>
-                <MenuItem>Pricing</MenuItem>
-                <MenuItem>FAQ</MenuItem>
-                <MenuItem>Blog</MenuItem>
+                <MenuItem>
+                  <Button href="/products" variant="text" color="info" fullWidth startIcon={<StoreMallDirectoryIcon/>}>
+                    Home
+                  </Button>
+                </MenuItem>
+                <MenuItem>
+                  <Button href="/products" variant="text" color="info" fullWidth startIcon={<LaptopChromebookIcon/>}>
+                    Products
+                  </Button>
+                </MenuItem>
+                <MenuItem>
+                <Button href="/cart" variant="text" color="info" fullWidth startIcon={<LocalMallIcon/>}>Cart</Button>
+                </MenuItem>
+                <MenuItem>
+                <Button href="/orders" variant="text" color="info" fullWidth startIcon={<AssignmentSharpIcon/>}>Orders</Button>
+                </MenuItem>
                 <Divider sx={{ my: 3 }} />
                 {userName ? (
                   <>
                     <MenuItem>
-                      <strong>Xin chào, {userName}</strong>
+                    <Button href="/profile" variant="text" color="black" fullWidth startIcon={<AccountCircleSharpIcon/>}>
+                      <Typography>Xin chào, {userName}</Typography>
+                    </Button>
                     </MenuItem>
                     <MenuItem>
                       <Button color="error" variant="outlined" fullWidth onClick={handleLogout}>

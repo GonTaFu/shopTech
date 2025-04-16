@@ -1,7 +1,5 @@
 "use client";
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Edit, Save, X } from "lucide-react"; // Icons for edit, save, and cancel
 import {
   Box,
@@ -12,6 +10,11 @@ import {
   Paper,
 } from "@mui/material";
 import { styled } from "@mui/system";
+
+import API from "../utils/api";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { notifySuccess, notifyError, NotifyContainer} from "../utils/notify";
 
 const StyledContainer = styled("div")(({ theme }) => ({
   minHeight: "100vh",
@@ -101,23 +104,43 @@ const CancelButton = styled(StyledButton)(({ theme }) => ({
 
 export default function ProfilePage() {
   // Sample user data (in a real app, this would come from a backend)
-  const [user, setUser] = useState({
-    name: "Nguyễn Văn A",
-    email: "nguyenvana@example.com",
-    phone: "0901234567",
-    address: "123 Đường Láng, Đống Đa, Hà Nội",
-  }
-  // {
-  //   name: "Nguyễn Thị B",
-  //   email: "nguyenthib@example.com",
-  //   phone: "0123456789",
-  //   address: "456 Đường Láng, Đống Đa, Hà Nội",
-  // }
+  const [user, setUser] = useState(
+    {
+      _id: "",
+      name: "Nguyễn Văn A",
+      emailAddress: "nguyenvana@example.com",
+      phoneNumber: "0901234567",
+    }
   );
+
+  const router = useRouter();
 
   // State for editing mode
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(user);
+  const [errorForm, setErrorForm] = useState({});
+
+  // Check validation for submit
+  const validateFormData = (data) => {
+    const errors = {};
+    if (!data.phoneNumber.trim()) {
+      errors.phoneNumber = "Số điện thoại không được để trống";
+    } else if (!/^\d{10,11}$/.test(data.phoneNumber)) {
+      errors.phoneNumber = "Số điện thoại không hợp lệ";
+    }
+
+    if (!data.emailAddress.trim()) {
+      errors.emailAddress = "Địa chỉ email không được để trống";
+    }
+    else {
+      const validateEmailRegex = /^\S+@\S+\.\S+$/;
+      if (!validateEmailRegex.test(data.emailAddress)) {
+        errors.emailAddress = "Địa chỉ email không hợp lệ";
+      }
+    }
+
+    return errors;
+  };
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -125,11 +148,46 @@ export default function ProfilePage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Handle open dialog form
+  const handleOpen = () => {
+    setFormData(user);
+    setIsEditing(true)
+  }
+
   // Handle form submission
-  const handleSave = (e) => {
-    e.preventDefault();
-    setUser(formData); // Update user data
-    setIsEditing(false); // Exit editing mode
+  const handleSave = async (e) => {
+    try {
+      e.preventDefault();
+
+      const errors = validateFormData(formData);
+      if (Object.keys(errors).length > 0) {
+        setErrorForm(errors);
+        notifyError("Không thể cập nhập");
+        return; 
+      }
+
+      const res = await API.put(`/accounts/customer/update/${user._id}`, formData);
+      const data = res.data.account;
+
+      setIsEditing(false); // Exit editing mode
+
+      Cookies.set("userName", data.name, { expires: 1 / 24 });
+      Cookies.set("userID", data._id, { expires: 1 / 24 });
+      Cookies.set("role", data.roleId, { expires: 1 / 24 });
+      
+      // Phát sự kiện để lắng nghe và cập nhật
+      window.dispatchEvent(new Event("user-login"));
+
+      fetchAPI();
+      
+      notifySuccess("Đã cập nhập thành công");
+
+      router.refresh();
+      return;
+    }
+    catch (err) {
+      notifyError("Lỗi! Không thể cập nhập được");
+    }
   };
 
   // Handle cancel editing
@@ -138,8 +196,33 @@ export default function ProfilePage() {
     setIsEditing(false); // Exit editing mode
   };
 
+  const fetchAPI = async () => {
+    try {
+      const id = Cookies.get("userID");
+      const name = Cookies.get("userName");
+      if (!id || !name) {
+        router.push("/account");
+        return;
+      }
+
+      const res = await API.get(`/accounts/${id}`);
+
+      setUser(prev => ({
+        _id: res.data._id,
+        name: res.data.name,
+        phoneNumber: res.data.phoneNumber,
+        emailAddress: res.data.emailAddress,
+      }));
+    } catch (err) {}
+  }
+
+  useEffect(() => {
+    fetchAPI();
+  }, []);
+
   return (
     <StyledContainer>
+      {/* {console.log(formData)} */}
       <Typography
         variant="h3"
         align="center"
@@ -178,9 +261,10 @@ export default function ProfilePage() {
               label="Email"
               variant="outlined"
               fullWidth
-              name="email"
-              value={formData.email}
+              name="emailAddress"
+              value={formData.emailAddress}
               onChange={handleInputChange}
+              helperText={errorForm.emailAddress}
               required
               sx={{ marginBottom: 2 }}
             />
@@ -188,20 +272,11 @@ export default function ProfilePage() {
               label="Số điện thoại"
               variant="outlined"
               fullWidth
-              name="phone"
-              value={formData.phone}
+              name="phoneNumber"
+              value={formData.phoneNumber}
               onChange={handleInputChange}
               required
-              sx={{ marginBottom: 2 }}
-            />
-            <StyledTextField
-              label="Địa chỉ"
-              variant="outlined"
-              fullWidth
-              name="address"
-              value={formData.address}
-              onChange={handleInputChange}
-              required
+              helperText={errorForm.phoneNumber}
               sx={{ marginBottom: 2 }}
             />
 
@@ -244,7 +319,7 @@ export default function ProfilePage() {
                 Thông tin cá nhân
               </Typography>
               <EditButton
-                onClick={() => setIsEditing(true)}
+                onClick={handleOpen}
                 variant="contained"
                 sx={{ display: "flex", alignItems: "center" }}
               >
@@ -268,7 +343,7 @@ export default function ProfilePage() {
                 "& strong": { color: "#1a237e", fontWeight: "600" },
               }}
             >
-              <strong>Email:</strong> {user.email}
+              <strong>Email:</strong> {user.emailAddress}
             </Typography>
             <Typography
               sx={{
@@ -277,20 +352,12 @@ export default function ProfilePage() {
                 "& strong": { color: "#1a237e", fontWeight: "600" },
               }}
             >
-              <strong>Số điện thoại:</strong> {user.phone}
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: "1.1rem",
-                color: "#424242",
-                "& strong": { color: "#1a237e", fontWeight: "600" },
-              }}
-            >
-              <strong>Địa chỉ:</strong> {user.address}
+              <strong>Số điện thoại:</strong> {user.phoneNumber}
             </Typography>
           </div>
         )}
       </StyledBox>
+      <NotifyContainer/>
     </StyledContainer>
   );
 }

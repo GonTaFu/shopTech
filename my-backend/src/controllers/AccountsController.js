@@ -76,6 +76,26 @@ class AccountController {
     }
   }
 
+  async updateAccountForCustomer(req, res) {
+    try {
+      const account = await Accounts.findById(req.params.id);
+      if (!account)
+        return res.status(404).json({ message: "Account not found" });
+
+      const { name, phoneNumber, emailAddress } = req.body;
+
+      account.name = name;
+      account.phoneNumber = phoneNumber;
+      account.emailAddress = emailAddress;
+
+      await account.save();
+      return res.json({ message: "Update account successfully", account });
+    } catch (error) {
+      return res.status(500).json({ error: "Internal Server Error", detail: error.message });
+    }
+  }
+
+
   // Xóa tài khoản
   async deleteAccount(req, res) {
     try {

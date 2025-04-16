@@ -17,7 +17,7 @@ export default function AdminPage() {
     const userRole = Cookies.get('role');
 
     if (!token || userRole != 'admin') {
-      router.push('/Home'); // Nếu không phải admin, redirect về Home
+      router.push('/'); // Nếu không phải admin, redirect về Home
     } else {  
       setLoading(false); // Nếu có quyền admin, set loading thành false
     }
