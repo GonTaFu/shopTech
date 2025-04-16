@@ -153,14 +153,6 @@ export default function Home() {
           {brands.map((brand, index) => (
             <Grid item xs={6} sm={4} md={2} key={brand._id || brand.name || index}>
               <StyledPaper elevation={3}>
-                <img
-                  src={`https://via.placeholder.com/80?text=${encodeURIComponent(
-                    brand.name || brand
-                  )}`}
-                  alt={brand.name || brand}
-                  loading="lazy"
-                  style={{ width: "60px", height: "60px", marginBottom: "8px" }}
-                />
                 <Typography
                   variant="subtitle1"
                   sx={{
@@ -247,9 +239,9 @@ export default function Home() {
         </Grid> */}
         <Grid container spacing={4}>
           {products.slice(0, 4).map((product) => (
-            <Grid item xs={12} sm={6} md={4} key={product.id}>
+            <Grid item xs={12} sm={6} md={4} key={product._id}>
               <StyledCard>
-                <CardMedia
+                {/* <CardMedia
                   component="img"
                   height="160"
                   image={product.image} // Đảm bảo product.image chứa đường dẫn URL của ảnh
@@ -258,6 +250,12 @@ export default function Home() {
                     borderTopLeftRadius: "12px",
                     borderTopRightRadius: "12px",
                   }}
+                /> */}
+                <CardMedia
+                  component="img"
+                  alt={product.name}
+                  height="140"
+                  image={product.images?.[0]}
                 />
                 <CardContent sx={{ padding: "16px" }}>
                   <Typography
