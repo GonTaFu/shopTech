@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Typography,
@@ -17,19 +17,19 @@ import { styled } from "@mui/system";
 
 const StyledContainer = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(4),
-  background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)", // Subtle gradient background
+  background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
   padding: theme.spacing(4),
   borderRadius: "12px",
-  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05)", // Soft shadow for depth
+  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05)",
 }));
 
 const StyledCard = styled(Card)(({ theme }) => ({
   transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-  borderRadius: "12px", // Rounded corners
+  borderRadius: "12px",
   backgroundColor: "#fff",
   "&:hover": {
     transform: "scale(1.05)",
-    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)", // Stronger shadow on hover
+    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
   },
 }));
 
@@ -37,11 +37,11 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   textAlign: "center",
   display: "flex",
-  flexDirection: "column", // Stack logo and text vertically
+  flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
   borderRadius: "10px",
-  background: "linear-gradient(145deg, #ffffff, #e6e6e6)", // Subtle gradient for brand cards
+  background: "linear-gradient(145deg, #ffffff, #e6e6e6)",
   boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
   transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
   "&:hover": {
@@ -53,57 +53,51 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: "8px",
   padding: theme.spacing(1.5),
-  background: "linear-gradient(90deg, #1976d2 30%, #42a5f5 90%)", // Gradient button
+  background: "linear-gradient(90deg, #1976d2 30%, #42a5f5 90%)",
   color: "#fff",
   fontWeight: "bold",
   transition: "background 0.3s ease-in-out",
   "&:hover": {
-    background: "linear-gradient(90deg, #1565c0 30%, #1976d2 90%)", // Darker gradient on hover
+    background: "linear-gradient(90deg, #1565c0 30%, #1976d2 90%)",
   },
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
   borderColor: "rgba(0, 0, 0, 0.1)",
   borderWidth: "1px",
-  background: "linear-gradient(to right, transparent, #1976d2, transparent)", // Gradient divider
+  background: "linear-gradient(to right, transparent, #1976d2, transparent)",
   height: "2px",
   margin: theme.spacing(4, 0),
 }));
 
 export default function Home() {
-  const products = [
-    {
-      id: 1,
-      name: "Laptop ASUS VivoBook",
-      price: "12.990.000đ",
-      image: "https://via.placeholder.com/200?text=Laptop+ASUS",
-    },
-    {
-      id: 2,
-      name: "PC MSI Gaming",
-      price: "18.490.000đ",
-      image: "https://via.placeholder.com/200?text=PC+MSI",
-    },
-    {
-      id: 3,
-      name: "Monitor Dell 27'",
-      price: "6.990.000đ",
-      image: "https://via.placeholder.com/200?text=Monitor+Dell",
-    },
-  ];
+  const [products, setProducts] = useState([]);
+  const [brands, setBrands] = useState([]);
 
-  const brands = [
-    "ASUS",
-    "MSI",
-    "Acer",
-    "Dell",
-    "Lenovo",
-    "HP",
-    "Gigabyte",
-    "Intel",
-    "AMD",
-    "NVIDIA",
-  ];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`);
+        const data = await res.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Lỗi khi tải sản phẩm:", error);
+      }
+    };
+
+    const fetchBrands = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/brands`);
+        const data = await res.json();
+        setBrands(data);
+      } catch (error) {
+        console.error("Lỗi khi tải thương hiệu:", error);
+      }
+    };
+
+    fetchProducts();
+    fetchBrands();
+  }, []);
 
   return (
     <StyledContainer maxWidth="lg">
@@ -113,10 +107,10 @@ export default function Home() {
         gutterBottom
         sx={{
           fontWeight: "bold",
-          color: "#1a237e", // Deep indigo color for heading
+          color: "#1a237e",
           letterSpacing: "1px",
           textTransform: "uppercase",
-          background: "linear-gradient(to right, #1a237e, #1976d2)", // Gradient text
+          background: "linear-gradient(to right, #1a237e, #1976d2)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
         }}
@@ -125,8 +119,6 @@ export default function Home() {
       </Typography>
       <Typography
         align="center"
-        color="textSecondary"
-        paragraph
         sx={{
           fontStyle: "italic",
           color: "#424242",
@@ -158,16 +150,16 @@ export default function Home() {
           Thương Hiệu Nổi Bật
         </Typography>
         <Grid container spacing={2}>
-          {brands.map((brand) => (
-            <Grid item xs={6} sm={4} md={2} key={brand}>
-              {" "}
-              {/* Adjusted grid size for better spacing */}
+          {brands.map((brand, index) => (
+            <Grid item xs={6} sm={4} md={2} key={brand._id || brand.name || index}>
               <StyledPaper elevation={3}>
                 <img
-                  src={`https://via.placeholder.com/80?text=${brand}`}
-                  alt={brand}
+                  src={`https://via.placeholder.com/80?text=${encodeURIComponent(
+                    brand.name || brand
+                  )}`}
+                  alt={brand.name || brand}
                   loading="lazy"
-                  style={{ width: "60px", height: "60px", marginBottom: "8px" }} // Adjusted image size
+                  style={{ width: "60px", height: "60px", marginBottom: "8px" }}
                 />
                 <Typography
                   variant="subtitle1"
@@ -177,7 +169,7 @@ export default function Home() {
                     fontSize: "1rem",
                   }}
                 >
-                  {brand}
+                  {brand.name || brand}
                 </Typography>
               </StyledPaper>
             </Grid>
@@ -201,13 +193,13 @@ export default function Home() {
         >
           Danh Sách Sản Phẩm
         </Typography>
-        <Grid container spacing={4}>
-          {products.map((product) => (
+        {/* <Grid container spacing={4}>
+          {products.slice(0, 4).map((product) => (
             <Grid item xs={12} sm={6} md={4} key={product.id}>
               <StyledCard>
                 <CardMedia
                   component="img"
-                  height="160" // Slightly taller images for better visuals
+                  height="160"
                   image={product.image}
                   alt={product.name}
                   sx={{
@@ -231,7 +223,59 @@ export default function Home() {
                   <Typography
                     variant="body2"
                     sx={{
-                      color: "#d32f2f", // Red price for emphasis
+                      color: "#d32f2f",
+                      fontWeight: "bold",
+                      fontSize: "1.1rem",
+                    }}
+                  >
+                    Giá: {product.price}
+                  </Typography>
+                  <StyledButton
+                    variant="contained"
+                    fullWidth
+                    sx={{ marginTop: 2 }}
+                    onClick={() =>
+                      alert(`Đã thêm ${product.name} vào giỏ hàng!`)
+                    }
+                  >
+                    Thêm vào giỏ hàng
+                  </StyledButton>
+                </CardContent>
+              </StyledCard>
+            </Grid>
+          ))}
+        </Grid> */}
+        <Grid container spacing={4}>
+          {products.slice(0, 4).map((product) => (
+            <Grid item xs={12} sm={6} md={4} key={product.id}>
+              <StyledCard>
+                <CardMedia
+                  component="img"
+                  height="160"
+                  image={product.image} // Đảm bảo product.image chứa đường dẫn URL của ảnh
+                  alt={product.name}
+                  sx={{
+                    borderTopLeftRadius: "12px",
+                    borderTopRightRadius: "12px",
+                  }}
+                />
+                <CardContent sx={{ padding: "16px" }}>
+                  <Typography
+                    gutterBottom
+                    variant="h6"
+                    component="div"
+                    sx={{
+                      fontWeight: "600",
+                      color: "#1a237e",
+                      fontSize: "1.2rem",
+                    }}
+                  >
+                    {product.name}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: "#d32f2f",
                       fontWeight: "bold",
                       fontSize: "1.1rem",
                     }}
