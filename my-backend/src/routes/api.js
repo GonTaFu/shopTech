@@ -28,10 +28,12 @@ router.get("/categories", categoriesController.getAllCategories);
 router.get("/categories/:id", categoriesController.getCategoryById);
 
 // Orders
-router.get("/orders", ordersController.getAllOrders);
+
 router.post("/orders", ordersController.createOrder);
 router.put("/orders/:id", ordersController.updateOrder);
-router.delete("/orders/:id", ordersController.deleteOrder);
+// router.delete("/orders/:id", ordersController.deleteOrder);
+router.get("/orders/:id", ordersController.getOrderById);
+router.get("/orders", ordersController.getAllOrders);
 
 
 // // Add - Create

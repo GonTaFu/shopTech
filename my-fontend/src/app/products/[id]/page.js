@@ -6,7 +6,8 @@ import HandleLoading from "../../../components/HandleLoading";
 import HandleServerError from "../../../components/HandleServerError";
 
 import API from "../../../utils/api";
-
+import { Container } from "@mui/material";
+  
 export default function Page() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -38,8 +39,14 @@ export default function Page() {
   if (error) return <HandleServerError/>;
 
   // Hiển thị loading trong khi chờ
-  if (!product) return <center><HandleLoading></HandleLoading></center>;
+  if (!product) return (
+    <Container sx={{marginTop: "10%", marginBottom: "100%"}}>
+      <HandleLoading></HandleLoading>
+    </Container>
+  );
 
   // Nếu dữ liệu hợp lệ thì hiển thị chi tiết
-  return <ProductDetail product={product} />;
+  return (
+    <ProductDetail product={product} />
+  );
 }

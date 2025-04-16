@@ -7,19 +7,18 @@ class OrdersController {
   async getAllOrders(req, res) {
     try {
       // Populate accountId to get billing_name from the Accounts collection
-      const orders = await Orders.find()
-        .populate("accountId", "name") // Assuming 'name' is the field in Accounts collection
-        .exec();
+      const orders = await Orders.find().populate("accountId", "name");
 
       // Map the orders to match the frontend's expected format
       const formattedOrders = orders.map((order) => ({
         _id: order._id,
         accountId: order.accountId?._id || "Unknown",
-        total_price: order.total_price,
+        name: order.name,
         status: order.status,
-        order_date: "N/A", // Fallback since not in schema
-        payment: "N/A", // Fallback since not in schema
-        billing_name: order.accountId?.name || "Unknown", // Get from populated accountId
+        payment: order.payment,
+        phoneNumber: order.phoneNumber,
+        address: order.address,
+        created_at: order.createdAt,
       }));
 
       return res.status(200).json(formattedOrders);
@@ -33,18 +32,31 @@ class OrdersController {
     }
   }
 
+  // Get order by ID
+  async getOrderById(req, res) {
+    try {
+      const { id } = req.params;
+      const order = await Orders.findById(id).populate("accountId");
+      const order_detail = await OrdersDetail.find({ orderId: id }).populate("productId");
+      res.json({ order, order_detail });
+    } catch (error) {
+      console.error("Lỗi lấy chi tiết đơn hàng:", error);
+      res.status(500).json({ message: "Lỗi khi lấy chi tiết đơn hàng" });
+    }
+  }
+
+
   // Create a new order
   async createOrder(req, res) {
     try {
       const {name, accountId, status, payment, phoneNumber, address, order_detail} = req.body;
-      var id = await new mongoose.Types.ObjectId().toString();
+      var orderId = await new mongoose.Types.ObjectId().toString();
       var newOrder = new Orders({
-        _id: id,
+        _id: orderId,
         name: name,
         phoneNumber: phoneNumber,
         address: address,
         accountId: accountId,
-        status: status,
         payment: payment,
       });
 
@@ -54,13 +66,14 @@ class OrdersController {
         var idDetail =  await new mongoose.Types.ObjectId().toString();
         var newOrderDetail = new OrdersDetail({
           _id: idDetail,
-          orderId: id,
+          orderId: orderId, 
           productId: order.id,
           quantity: order.quantity,
         });
 
         await newOrderDetail.save();
-      })
+      });
+
       return res.json({ message: "Add product successfully" });
     } catch (error) {
       console.error("Error creating order:", error);
@@ -86,15 +99,7 @@ class OrdersController {
           .status(404)
           .json({ success: false, message: "Order not found" });
       }
-      return res.status(200).json({
-        _id: updatedOrder._id,
-        accountId: updatedOrder.accountId?._id || "Unknown",
-        total_price: updatedOrder.total_price,
-        status: updatedOrder.status,
-        order_date: "N/A",
-        payment: "N/A",
-        billing_name: updatedOrder.accountId?.name || "Unknown",
-      });
+      return res.status(200).json(updatedOrder);
     } catch (error) {
       console.error("Error updating order:", error);
       return res.status(500).json({

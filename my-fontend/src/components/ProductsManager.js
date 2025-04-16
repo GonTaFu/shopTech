@@ -245,7 +245,7 @@ const ProductsManager = () => {
   if (products.length <= 0) {
     return (
       <>
-        <Container sx={{}}>
+        <Container>
           <Container sx={{ marginTop: "5%", marginBottom: "5%" }}>
             <Typography gutterBottom variant="h2" component="div">
               <center>Quản lý sản phẩm: {title} </center>

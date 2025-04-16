@@ -1,14 +1,18 @@
 "use client"
-import { Container, Typography} from "@mui/material";
+import { Container, Typography, CircularProgress} from "@mui/material";
 import * as React from "react";
 
 const HandleLoading = () => {
     return (
         <>
-            <Container sx={{marginTop: "20%", marginBottom: "20%"}}>
-                <Typography gutterBottom variant="h5" component="div">
-                <center>Loading........</center>
+            <Container>
+                <Typography gutterBottom variant="h2" component="div" fontWeight="bold">
+                <center>Loading</center>
                 </Typography>
+                <Typography gutterBottom variant="h2" component="div" fontWeight="bold">
+                <center><CircularProgress/></center>
+                </Typography>
+
             </Container>
         
         </>

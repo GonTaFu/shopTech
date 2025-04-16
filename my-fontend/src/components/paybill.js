@@ -93,6 +93,7 @@ const PayPage = () => {
 
   return (
     <>
+    {console.log(formData)}
       {(formData.order_detail.length > 0 && (
         <>
           <Container maxWidth="md" sx={{ mt: 5 }}>
@@ -153,9 +154,9 @@ const PayPage = () => {
                       <Autocomplete
                         disablePortal
                         options={payment}
-                        value={formData.payment || null}
+                        value={payment.find(p => p.value === formData.payment) || null}
                         onChange={(event, value) => {
-                          setFormData((prev) => ({ ...prev, payment: value.label }));
+                          setFormData((prev) => ({ ...prev, payment: value?.value || "" }));
                         }}
                         sx={{ width: 200 }}
                         renderInput={(params) => (
