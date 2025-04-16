@@ -65,6 +65,7 @@ export default function MyAppBar() {
   const handleLogout = () => {
     Cookies.remove('token');
     Cookies.remove('userName');
+    Cookies.remove('userID');
     setUserName('');
     router.push('/account');
   };

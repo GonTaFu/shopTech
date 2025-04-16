@@ -38,7 +38,9 @@ const PayPage = () => {
   const fetch = async () => {
     try {
       const id = Cookies.get("userID");
-      if (!id) {
+      const name = Cookies.get("userName");
+      if (!id && !name) {
+        router.push('/account');
         return;
       }
 
