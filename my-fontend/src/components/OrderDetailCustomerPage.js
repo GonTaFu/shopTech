@@ -1,43 +1,45 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation"; // Sử dụng useParams từ next/navigation
 import { Container, Typography, Table, TableBody, TableRow, TableCell, TableHead, Paper, TableContainer } from "@mui/material";
-import API from "../utils/api";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import PaymentIcon from "@mui/icons-material/Payment";
+import PersonIcon from "@mui/icons-material/Person";
+import API from "../utils/api"; // Import API helper
 import HandleLoading from "./HandleLoading";
 
-export default function OrderDetailPage() {
-  const { id } = useParams();
+export default function OrderDetailCustomerPage({ accountId }) {
+  const router = useRouter();
+  const { id } = useParams(); // Lấy id từ URL
   const [order, setOrder] = useState(null);
   const [details, setDetails] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch thông tin chi tiết đơn hàng từ API
   useEffect(() => {
-    const fetchOrder = async () => {
-      try {
-        const res = await API.get(`/orders/${id}`);
-        setOrder(res.data.order);
-        setDetails(res.data.order_detail);
-      } catch (err) {
-        console.error("Lỗi khi lấy chi tiết đơn hàng:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (id) {
+      const fetchOrderDetail = async () => {
+        try {
+          const res = await API.get(`/orders/${id}`);
+          setOrder(res.data.order);
+          setDetails(res.data.order_detail);
+        } catch (err) {
+          console.error("Lỗi khi lấy chi tiết đơn hàng:", err);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    if (id) fetchOrder();
+      fetchOrderDetail();
+    }
   }, [id]);
 
   if (loading) {
-    return (
-      <center>
-        <HandleLoading />
-      </center>
-    );
+    return <HandleLoading />;
   }
 
-  if (!order) {
-    return <Typography>Không tìm thấy đơn hàng</Typography>;
+  if (!details) {
+    return <div>Không tìm thấy đơn hàng.</div>;
   }
 
   return (

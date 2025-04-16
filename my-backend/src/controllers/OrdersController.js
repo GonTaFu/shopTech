@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Orders = require("../models/OrdersModel");
-var OrdersDetail = require('../models/OrdersDetailModel'); // cái order detail vẫn chưa được xài
+var OrdersDetail = require("../models/OrdersDetailModel"); // cái order detail vẫn chưa được xài
 
 class OrdersController {
   // Get all orders
@@ -37,19 +37,44 @@ class OrdersController {
     try {
       const { id } = req.params;
       const order = await Orders.findById(id).populate("accountId");
-      const order_detail = await OrdersDetail.find({ orderId: id }).populate("productId");
+      const order_detail = await OrdersDetail.find({ orderId: id }).populate(
+        "productId"
+      );
       res.json({ order, order_detail });
     } catch (error) {
       console.error("Lỗi lấy chi tiết đơn hàng:", error);
       res.status(500).json({ message: "Lỗi khi lấy chi tiết đơn hàng" });
     }
   }
-
+  // GET /orders/account/:accountId
+  async getOrdersByAccountId(req, res) {
+    try {
+      const { id } = req.params;
+      const orders = await Orders.find({ accountId: id }); // populate nếu cần tên người dùng
+      res.json(orders);
+    } catch (err) {
+      console.error("Error fetching orders by accountId:", err);
+      res
+        .status(500)
+        .json({
+          message: "Lỗi khi lấy danh sách đơn hàng",
+          error: err.message,
+        });
+    }
+  }
 
   // Create a new order
   async createOrder(req, res) {
     try {
-      const {name, accountId, status, payment, phoneNumber, address, order_detail} = req.body;
+      const {
+        name,
+        accountId,
+        status,
+        payment,
+        phoneNumber,
+        address,
+        order_detail,
+      } = req.body;
       var orderId = await new mongoose.Types.ObjectId().toString();
       var newOrder = new Orders({
         _id: orderId,
@@ -63,10 +88,10 @@ class OrdersController {
       await newOrder.save();
 
       order_detail.map(async (order) => {
-        var idDetail =  await new mongoose.Types.ObjectId().toString();
+        var idDetail = await new mongoose.Types.ObjectId().toString();
         var newOrderDetail = new OrdersDetail({
           _id: idDetail,
-          orderId: orderId, 
+          orderId: orderId,
           productId: order.id,
           quantity: order.quantity,
         });
@@ -127,6 +152,37 @@ class OrdersController {
         success: false,
         message: "Error deleting order",
         error: error.message,
+      });
+    }
+  }
+
+  // PUT /orders/:id/cancel
+  async cancelOrder(req, res) {
+    try {
+      const { id } = req.params;
+
+      // Cập nhật trạng thái đơn hàng thành "cancelled"
+      const updatedOrder = await Orders.findByIdAndUpdate(
+        id,
+        { status: "cancelled" }, // trạng thái "cancelled" cho đơn hủy
+        { new: true } // trả về đơn hàng đã cập nhật
+      );
+
+      if (!updatedOrder) {
+        return res
+          .status(404)
+          .json({ message: "Không tìm thấy đơn hàng để hủy" });
+      }
+
+      res.json({
+        message: "Đơn hàng đã được hủy thành công",
+        order: updatedOrder,
+      });
+    } catch (err) {
+      console.error("Error cancelling order:", err);
+      res.status(500).json({
+        message: "Lỗi khi hủy đơn hàng",
+        error: err.message,
       });
     }
   }
