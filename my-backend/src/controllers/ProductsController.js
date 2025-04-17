@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
 var Products = require("../models/ProductsModel");
 var Categories = require("../models/CategoriesModel");
 var Brands = require("../models/BrandsModel");
+var OrdersDetail = require("../models/OrdersDetailModel");
 
 class ProductsController {
   // Read
@@ -138,7 +139,14 @@ class ProductsController {
 
   async destroyProduct(req, res) {
     try {
-      const deleted = await Products.findByIdAndDelete(req.params.id);
+      const id = req.params.id || "";
+
+      const ordersDetail = await OrdersDetail.findOne({productId: id});
+
+      if (ordersDetail != null) {
+        return res.status(409).json({ error: "Can not delete because order still have products"});
+      }
+      const deleted = await Products.findByIdAndDelete(id);
 
       if (!deleted) {
         return res.status(404).json({ message: "Product not found" });

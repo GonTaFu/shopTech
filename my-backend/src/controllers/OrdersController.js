@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Orders = require("../models/OrdersModel");
-var OrdersDetail = require("../models/OrdersDetailModel"); // cái order detail vẫn chưa được xài
+var OrdersDetail = require("../models/OrdersDetailModel");
 
 class OrdersController {
   // Get all orders
@@ -140,6 +140,9 @@ class OrdersController {
     try {
       const orderId = req.params.id;
       const deletedOrder = await Orders.findByIdAndDelete(orderId);
+
+      await OrdersDetail.deleteMany({orderId: orderId});
+
       if (!deletedOrder) {
         return res
           .status(404)
