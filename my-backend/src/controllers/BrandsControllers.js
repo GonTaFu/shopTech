@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var Brand = require("../models/BrandsModel");
+var Product = require("../models/ProductsModel");
 
 class BrandsController {
   // [GET] /brands - Lấy tất cả brand
@@ -61,7 +62,15 @@ class BrandsController {
   // [DELETE] /brands/:id - Xoá brand
   async delete(req, res) {
     try {
-      const deletedBrand = await Brand.findByIdAndDelete(req.params.id);
+      const id = req.params.id || "";
+
+      const product = await Product.findOne({brand: id});
+      if (product != null) {
+        return res.status(409).json({ error: "Can not delete because order still have products"});
+      }
+
+      const deletedBrand = await Brand.findByIdAndDelete(id);
+
       if (!deletedBrand)
         return res.status(404).json({ message: "Không tìm thấy Brand để xoá" });
       res.json({ message: "Đã xoá brand thành công" });
