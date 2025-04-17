@@ -40,9 +40,9 @@ export default function OrderHistory({ orders, fetchOrdersByAccount }) {
   const displayedOrders = orders.slice(startIndex, startIndex + itemsPerPage);
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4, marginBottom: "10%" }}>
+    <Container maxWidth="md" sx={{ mt: 4, marginBottom: "100%" }}>
       <Typography variant="h4" gutterBottom textAlign="center">
-        🛒 Order History
+      Order History
       </Typography>
       <Grid container rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }} columns={12}>
         {displayedOrders.map((order) => (

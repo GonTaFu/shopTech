@@ -38,9 +38,10 @@ export default function LoginPage() {
 
       Cookies.set("token", data.token, { expires: 1 / 24 }); // Cookie tồn tại 1 giờ
       Cookies.set("userName", data.fullName, { expires: 1 / 24 });
-      console.log("User data: ", data);
-      Cookies.set("userID", data.id);
-      Cookies.set("role", data.role, { expires: 1 / 24 }); // 🔥 thêm dòng này
+      Cookies.set("userID", data.id, { expires: 1 / 24 });
+      Cookies.set("role", data.role, { expires: 1 / 24 });
+
+      // Phát sự kiện để lắng nghe và cập nhật
       window.dispatchEvent(new Event("user-login"));
       
       if (data.role == "admin") {

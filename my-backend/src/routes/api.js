@@ -62,6 +62,7 @@ router.get("/brands", brandsController.getAll);
 
 // Account
 router.post("/accounts/add", accountsController.addAccount);
+router.put("/accounts/customer/update/:id", accountsController.updateAccountForCustomer);
 router.put("/accounts/update/:id", accountsController.updateAccount);
 router.delete("/accounts/delete/:id", accountsController.deleteAccount);
 router.get("/accounts", accountsController.getAll);
