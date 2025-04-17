@@ -2,7 +2,7 @@
 import Image from "next/image";
 import AdminUserManagement  from "../../../components/UserManagement";
 import { Container } from "@mui/material";
-
+import SideBar from "../../../components/Sidebar";
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
@@ -28,7 +28,9 @@ export default function UserManagementPage() {
     }
 
     return (
-        <Container maxWidth="lg" sx={{ marginBottom:50 }}>
+        <div>
+            <SideBar></SideBar>
+
             <AdminUserManagement></AdminUserManagement>
             <style jsx>{`
             h1 {
@@ -37,6 +39,6 @@ export default function UserManagementPage() {
                 display: flex;
                 },
                 `}</style>
-        </Container>
+        </div>
     );
 }

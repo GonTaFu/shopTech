@@ -2,6 +2,7 @@
 import * as React from 'react';
 
 import OrderManagementPage from '../../../components/OrderManagementPage';
+import SideBar from "../../../components/Sidebar";
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -29,6 +30,9 @@ export default function Page() {
     }
 
     return (
-        <OrderManagementPage/>
+        <div>
+          <SideBar/>
+          <OrderManagementPage/>
+        </div>
     );
 }

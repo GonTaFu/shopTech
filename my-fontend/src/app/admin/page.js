@@ -5,7 +5,7 @@ import AdminDashboard from '../../components/AdminDashboard';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
-
+import SideBar from '../../components/Sidebar';
 import HandleLoading from '../../components/HandleLoading';
 
 export default function AdminPage() {
@@ -26,11 +26,13 @@ export default function AdminPage() {
   if (loading) {
     return <HandleLoading/>; // Đợi khi kiểm tra quyền
   }
-
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Sidebar />
-      <AdminDashboard />
-    </Box>
+      
+    <div>
+      <AdminDashboard>
+        {/* Nội dung của trang admin */}
+        <h1>Trang quản trị</h1>
+      </AdminDashboard>
+    </div>
   );
 }
