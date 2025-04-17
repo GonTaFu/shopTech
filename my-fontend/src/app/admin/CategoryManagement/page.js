@@ -1,6 +1,7 @@
 "use client";
 import Head from "next/head";
 import CategoryManagement from "../../../components/CategoryManagement";
+import SideBar from "../../../components/Sidebar";
 
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -31,7 +32,7 @@ export default function CategoryPage() {
       <Head>
         <title>Category Management Page</title>
       </Head>
-
+      <SideBar />
       <h1>Category Management</h1>
       <CategoryManagement />
 

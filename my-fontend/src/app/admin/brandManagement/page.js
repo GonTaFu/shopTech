@@ -3,7 +3,7 @@
 import Image from "next/image";
 import BrandManagement from "../../../components/BrandManage";
 import { Container } from "@mui/material"
-
+import SideBar from "../../../components/Sidebar";
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
@@ -30,6 +30,7 @@ export default function Home() {
 
   return (
     <Container maxWidth="lg" sx={{ marginBottom: 50 }}>
+      <SideBar></SideBar>
       {/* <LoginPage></LoginPage> */}
       {/* <RegisterPage></RegisterPage> */}
       <BrandManagement></BrandManagement>

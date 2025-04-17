@@ -281,14 +281,9 @@ export default function Home() {
                     Giá: {product.price}
                   </Typography>
                   <StyledButton
-                    variant="contained"
-                    fullWidth
-                    sx={{ marginTop: 2 }}
-                    onClick={() =>
-                      alert(`Đã thêm ${product.name} vào giỏ hàng!`)
-                    }
+                    href={`/products/${product._id}`}
                   >
-                    Thêm vào giỏ hàng
+                    Xem chi tiết
                   </StyledButton>
                 </CardContent>
               </StyledCard>

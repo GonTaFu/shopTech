@@ -2,11 +2,11 @@
 // src/app/admin/products/page.js
 import { Container } from "@mui/material";
 import ProductsManager from "../../../components/ProductsManager";
-
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import HandleLoading from '../../../components/HandleLoading';
+import Sidebar from "@/components/Sidebar";
   
 
 export default function Home() {
@@ -30,6 +30,7 @@ export default function Home() {
 
     return (
       <Container sx={{marginBottom: "20%"}}>
+        <Sidebar></Sidebar>
         <ProductsManager></ProductsManager>
       </Container>
     );
