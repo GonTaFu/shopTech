@@ -2,10 +2,6 @@ var mongoose = require("mongoose");
 var Products = require("../models/ProductsModel");
 var Categories = require("../models/CategoriesModel");
 var Brands = require("../models/BrandsModel");
-var mongoose = require("mongoose");
-var Products = require("../models/ProductsModel");
-var Categories = require("../models/CategoriesModel");
-var Brands = require("../models/BrandsModel");
 
 class ProductsController {
   // Read
@@ -110,11 +106,11 @@ class ProductsController {
       product.show = true;
 
       await product.save();
-      return res.json({ message: "Update product successfully", product });
+      return res.json({ message: "Update product successfully"});
     } catch (error) {
       return res
         .status(500)
-        .json({ error: "Internal Server Error", detail: error.message });
+        .json({ error: "Internal Server Error"});
     }
   }
 
@@ -136,7 +132,7 @@ class ProductsController {
     } catch (error) {
       return res
         .status(500)
-        .json({ error: "Internal Server Error", detail: error.message });
+        .json({ error: "Internal Server Error"});
     }
   }
 
@@ -152,7 +148,7 @@ class ProductsController {
     } catch (error) {
       return res
         .status(500)
-        .json({ error: "Internal Server Error", detail: error.message });
+        .json({ error: "Internal Server Error"});
     }
   }
 
@@ -172,7 +168,21 @@ class ProductsController {
     catch (err) {
       return res
         .status(500)
-        .json({ error: "Internal Server Error", detail: error.message });
+        .json({ error: "Internal Server Error"});
+    }
+  }
+
+  async searchProduct(req, res) {
+    try {
+      const keyWord = req.query.q || "";
+      const products = await Products.find({$text:{$search:keyWord}, show: true});
+
+      return res.json(products);
+    }
+    catch (err) {
+      return res
+        .status(500)
+        .json({ error: "Internal Server Error"});
     }
   }
 }

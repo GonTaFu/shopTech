@@ -21,6 +21,7 @@ var ProductsSchema = new Schema({
     show: Boolean,
 });
 
+ProductsSchema.index({ name: 'text', description: 'text' });
 var ProductModel = mongoose.model('Products', ProductsSchema);
 
 module.exports = ProductModel;

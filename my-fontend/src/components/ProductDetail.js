@@ -32,8 +32,8 @@ const TableProductDetail = ({ product }) => {
     ID: product._id,
     Name: product.name,
     Price: `${product.price.toLocaleString()} VNĐ`,
-    Brand: product.brand?.name || "",
-    Category: product.category?.name || "",
+    Brand: product.brand?.name || "Unknow",
+    Category: product.category?.name || "Unknow",
     Quantity: product.quantity,
     Warranty: `${product.warranty} Tháng`,
   };
@@ -69,6 +69,7 @@ const ProductDetail = ({ product }) => {
     <>
       <Container sx={{ py: 4 }} maxWidth="md">
         <NotifyContainer/>
+        {console.log(product)}
         <CssBaseline />
         <Box sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}>
           <Grid
@@ -98,10 +99,10 @@ const ProductDetail = ({ product }) => {
                   {product.price.toLocaleString()} VNĐ
                 </Typography>
                 <Typography variant="h8" component="div">
-                  Thương hiệu: {product.brand.name}
+                  Thương hiệu: {product.brand?.name || "Unknow"}
                 </Typography>
                 <Typography variant="h8" component="div">
-                  Loại sản phẩm: {product.category.name}
+                  Loại sản phẩm: {product.category?.name || "Unknow"}
                 </Typography>
                 {/* <Typography variant="h8" component="div">
                   Status: {product.status}

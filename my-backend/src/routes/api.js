@@ -16,6 +16,7 @@ router.delete("/products/delete/:id", productsController.deleteProduct);
 router.delete("/products/destroy/:id", productsController.destroyProduct);
 router.patch("/products/restore/:id", productsController.restoreProduct);
 router.get("/products/trash", productsController.getTrash);
+router.get("/products/search/", productsController.searchProduct);
 router.get("/products/:id", productsController.getById);
 router.get("/products", productsController.getAll);
 
