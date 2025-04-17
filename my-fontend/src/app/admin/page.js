@@ -29,6 +29,7 @@ export default function AdminPage() {
   return (
       
     <div>
+      <SideBar></SideBar>
       <AdminDashboard>
         {/* Nội dung của trang admin */}
         <h1>Trang quản trị</h1>
