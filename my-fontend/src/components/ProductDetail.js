@@ -44,10 +44,10 @@ const TableProductDetail = ({ product }) => {
           {Object.entries(displayData).map(([key, value]) => (
             <TableRow key={key}>
               <TableCell sx={{ fontWeight: "bold" }}>
-                {key.charAt(0).toUpperCase() + key.slice(1)}
+                {key}
               </TableCell>
               <TableCell>
-                {typeof value === "object" ? JSON.stringify(value) : value}
+                {value}
               </TableCell>
             </TableRow>
           ))}

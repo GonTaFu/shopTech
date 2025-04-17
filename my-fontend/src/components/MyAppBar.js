@@ -89,6 +89,7 @@ export default function MyAppBar() {
   return (
     <AppBar
       position="fixed"
+      // position="static"
       enableColorOnDark
       sx={{
         boxShadow: 0,
@@ -97,7 +98,7 @@ export default function MyAppBar() {
         mt: 4
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <StyledToolBar variant="dense" disableGutters>
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

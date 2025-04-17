@@ -20,6 +20,13 @@ const SearchBoxInput = () => {
               id="standard-adornment-amount"
               value={keyWord}
               onChange={(e) => {setkeyWord(e.target.value)}}
+              onKeyDown={(event) => {
+                console.log(`Pressed keyCode ${event.key}`);
+                if (event.key === 'Enter') {
+                  handleSearch();
+                }
+              }}
+            
               startAdornment={<InputAdornment position="start">Searching..</InputAdornment>}
         />
       </FormControl>

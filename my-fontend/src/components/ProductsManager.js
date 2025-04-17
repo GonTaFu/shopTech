@@ -95,11 +95,6 @@ const ProductsManager = () => {
       setBrands(brandsRes.data);
       setCategories(categoriesRes.data.data);
 
-      // productsRes.data.map((p) => {
-      //   delete p.show;
-      //   delete p.__v;
-      // });
-
       setProducts(productsRes.data);
 
       if (
@@ -148,7 +143,7 @@ const ProductsManager = () => {
     const errors = validateForm();
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
-      notifyError("Lỗi server");
+      notifyError("Chưa điền thông tin hoặc điền thông tin sai định dạng");
       return;
     }
 
@@ -157,23 +152,23 @@ const ProductsManager = () => {
 
     try {
       if (editingProduct) {
-        const res = await API.put(
+        await API.put(
           `/products/update/${editingProduct._id}`,
           productFormData
         );
-        console.log("Da update thanh cong");
         notifySuccess("Cập nhập sản phẩm thành công");
       } else {
-        const res = await API.post("/products/add", productFormData);
-        console.log("Đã gửi lên server:", res.data);
+
+        await API.post("/products/add", productFormData);
         notifySuccess("Tạo sản phẩm thành công");
       }
-    } catch (err) {
-      setErrorServer(true);
+    } catch (error) {
+      // setErrorServer(true);
+      console.log(error);
       notifyError("Lỗi hệ thống");
     }
 
-    const resFetch = await fetchAPI();
+    await fetchAPI();
 
     handleCloseDialog();
   };
@@ -186,41 +181,37 @@ const ProductsManager = () => {
         ? `/products/destroy/${id}` // Xoá vĩnh viễn
         : `/products/delete/${id}`; // Xoá vào thùng rác
 
-      const res = await API.delete(url);
+      await API.delete(url);
 
       if (isTrash) {
         notifySuccess("Đã xóa vĩnh viễn");
       } else notifySuccess("Đã xóa vào thùng rác");
 
       fetchAPI();
-    } catch (err) {
-      setErrorServer(true);
-      notifyError("Lỗi hệ thống");
+    } catch (error) {
+      console.log(error);
+      notifyError(error.response.data.message);
     }
   };
 
   const handleRestore = async (id = null) => {
     try {
       if (id == null) return;
-      const res = await API.patch(`/products/restore/${id}`);
+      await API.patch(`/products/restore/${id}`);
 
       notifySuccess("Khôi phục thành công");
 
       await fetchAPI(true);
-    } catch (err) {
+    } catch (error) {
       setErrorServer(true);
       notifyError("Lỗi hệ thống");
     }
   };
 
   const handleOpenTrash = async () => {
-    try {
-      setIsTrash(true);
-      setTitle("Thùng rác");
-      await fetchAPI(true);
-    } catch (err) {
-      setErrorServer(true);
-    }
+    setIsTrash(true);
+    setTitle("Thùng rác");
+    await fetchAPI(true);
   };
 
   const handleCloseTrash = async () => {

@@ -77,7 +77,7 @@ class ProductsController {
 
       return res.json({ message: "Add product successfully" });
     } catch (error) {
-      return res.status(500).json({ error: "Internal Server Error" });
+      return res.status(500).json({ message: "Internal Server Error" });
     }
   }
 
@@ -111,7 +111,7 @@ class ProductsController {
     } catch (error) {
       return res
         .status(500)
-        .json({ error: "Internal Server Error"});
+        .json({ message: "Internal Server Error"});
     }
   }
 
@@ -133,7 +133,7 @@ class ProductsController {
     } catch (error) {
       return res
         .status(500)
-        .json({ error: "Internal Server Error"});
+        .json({ message: "Internal Server Error"});
     }
   }
 
@@ -142,9 +142,9 @@ class ProductsController {
       const id = req.params.id || "";
 
       const ordersDetail = await OrdersDetail.findOne({productId: id});
-
+      
       if (ordersDetail != null) {
-        return res.status(409).json({ error: "Can not delete because order still have products"});
+        return res.status(409).json({ message: "Can not delete because order still have products"});
       }
       const deleted = await Products.findByIdAndDelete(id);
 
@@ -156,7 +156,7 @@ class ProductsController {
     } catch (error) {
       return res
         .status(500)
-        .json({ error: "Internal Server Error"});
+        .json({ message: "Internal Server Error"});
     }
   }
 
@@ -176,7 +176,7 @@ class ProductsController {
     catch (err) {
       return res
         .status(500)
-        .json({ error: "Internal Server Error"});
+        .json({ message: "Internal Server Error"});
     }
   }
 
@@ -190,7 +190,7 @@ class ProductsController {
     catch (err) {
       return res
         .status(500)
-        .json({ error: "Internal Server Error"});
+        .json({ message: "Internal Server Error"});
     }
   }
 }

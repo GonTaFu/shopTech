@@ -40,7 +40,12 @@ class OrdersController {
       const order_detail = await OrdersDetail.find({ orderId: id }).populate(
         "productId"
       );
-      res.json({ order, order_detail });
+
+      var total = 0;
+      order_detail.map((detail) => {
+        total += (detail.quantity * detail.productId.price);
+      })
+      res.json({ order, order_detail , total});
     } catch (error) {
       console.error("Lỗi lấy chi tiết đơn hàng:", error);
       res.status(500).json({ message: "Lỗi khi lấy chi tiết đơn hàng" });
