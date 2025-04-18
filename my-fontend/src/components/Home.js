@@ -290,7 +290,7 @@ export default function Home() {
                       fontSize: "1.1rem",
                     }}
                   >
-                    Giá: {product.price}
+                    Giá: {product.price.toLocaleString()} VNĐ
                   </Typography>
                   <StyledButton
                     href={`/products/${product._id}`}
