@@ -7,7 +7,6 @@ export default function AdminDashboard({ children }) {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Sidebar />
       <Box
         component="main"
         sx={{
@@ -15,7 +14,7 @@ export default function AdminDashboard({ children }) {
           minHeight: '100vh',
           backgroundColor: theme.palette.grey[100],
           p: 3,
-          marginLeft: theme.spacing(7), // Adjust for collapsed sidebar
+          margin: 0,
         }}
       >
         <Container maxWidth="lg">

@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 var Brand = require("../models/BrandsModel");
+var Product = require("../models/ProductsModel");
 
 class BrandsController {
   // [GET] /brands - Lấy tất cả brand
@@ -8,7 +9,7 @@ class BrandsController {
       const brands = await Brand.find();
       res.json(brands);
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
 
@@ -20,7 +21,7 @@ class BrandsController {
         return res.status(404).json({ message: "Không tìm thấy Brand" });
       res.json(brand);
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
 
@@ -36,7 +37,7 @@ class BrandsController {
 
       res.status(201).json(newBrand);
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(400).json({ error: "Internal Server Error" });
     }
   }
 
@@ -54,19 +55,27 @@ class BrandsController {
           .json({ message: "Không tìm thấy Brand để cập nhật" });
       res.json(updatedBrand);
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(400).json({ error: "Internal Server Error" });
     }
   }
 
   // [DELETE] /brands/:id - Xoá brand
   async delete(req, res) {
     try {
-      const deletedBrand = await Brand.findByIdAndDelete(req.params.id);
+      const id = req.params.id || "";
+
+      const product = await Product.findOne({brand: id});
+      if (product != null) {
+        return res.status(409).json({ error: "Không thể xóa do vẫn còn sản phẩm chứa brand này"});
+      }
+
+      const deletedBrand = await Brand.findByIdAndDelete(id);
+
       if (!deletedBrand)
         return res.status(404).json({ message: "Không tìm thấy Brand để xoá" });
       res.json({ message: "Đã xoá brand thành công" });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.status(500).json({ error: "Internal Server Error"});
     }
   }
 }

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Orders = require("../models/OrdersModel");
-var OrdersDetail = require("../models/OrdersDetailModel"); // cái order detail vẫn chưa được xài
+var OrdersDetail = require("../models/OrdersDetailModel");
 
 class OrdersController {
   // Get all orders
@@ -40,7 +40,12 @@ class OrdersController {
       const order_detail = await OrdersDetail.find({ orderId: id }).populate(
         "productId"
       );
-      res.json({ order, order_detail });
+
+      var total = 0;
+      order_detail.map((detail) => {
+        total += (detail.quantity * detail.productId.price);
+      })
+      res.json({ order, order_detail , total});
     } catch (error) {
       console.error("Lỗi lấy chi tiết đơn hàng:", error);
       res.status(500).json({ message: "Lỗi khi lấy chi tiết đơn hàng" });
@@ -140,6 +145,9 @@ class OrdersController {
     try {
       const orderId = req.params.id;
       const deletedOrder = await Orders.findByIdAndDelete(orderId);
+
+      await OrdersDetail.deleteMany({orderId: orderId});
+
       if (!deletedOrder) {
         return res
           .status(404)

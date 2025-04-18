@@ -9,6 +9,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import API from "../utils/api";
 
+import { notifySuccess, notifyError, NotifyContainer } from '../utils/notify';
+
 export default function BrandManagement() {
   const [brands, setBrands] = useState([]);
   const [newBrandName, setNewBrandName] = useState('');
@@ -24,7 +26,8 @@ export default function BrandManagement() {
       const res = await API.get('/brands');
       setBrands(res.data);
     } catch (error) {
-      console.error('Lỗi khi tải dữ liệu:', error);
+      console.log('Lỗi khi tải dữ liệu:', error);
+      notifyError(error.response.data.error);
     }
   };
 
@@ -35,8 +38,10 @@ export default function BrandManagement() {
       const res = await API.post(`/brands/add`, { name: newBrandName });
       setBrands([...brands, res.data]);
       setNewBrandName('');
+      notifySuccess("Đã thêm mới thành công");
     } catch (error) {
-      console.error('Lỗi khi thêm brand:', error);
+      console.log('Lỗi khi thêm brand:', error);
+      notifyError(error.response.data.error);
     }
   };
 
@@ -45,8 +50,10 @@ export default function BrandManagement() {
     try {
       await API.delete(`/brands/delete/${id}`);
       setBrands(brands.filter(b => b._id !== id));
+      notifySuccess("Đã xóa thành công");
     } catch (error) {
-      console.error('Lỗi khi xoá brand:', error);
+      console.log('Lỗi khi xoá brand:', error);
+      notifyError(error.response.data.error);
     }
   };
 
@@ -101,6 +108,7 @@ export default function BrandManagement() {
             </TableBody>
           </Table>
         </TableContainer>
+        <NotifyContainer/>
       </Paper>
     </Box>
   );

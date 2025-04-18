@@ -10,6 +10,7 @@ export default function OrderDetailPage() {
   const { id } = useParams();
   const [order, setOrder] = useState(null);
   const [details, setDetails] = useState([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,6 +19,7 @@ export default function OrderDetailPage() {
         const res = await API.get(`/orders/${id}`);
         setOrder(res.data.order);
         setDetails(res.data.order_detail);
+        setTotal(res.data.total);
       } catch (err) {
         console.error("Lỗi khi lấy chi tiết đơn hàng:", err);
       } finally {
@@ -51,6 +53,7 @@ export default function OrderDetailPage() {
       <Typography variant="subtitle1">Địa chỉ: {order.address}</Typography>
       <Typography variant="subtitle1">Trạng thái: {order.status}</Typography>
       <Typography variant="subtitle1">Phương thức thanh toán: {order.payment}</Typography>
+      <Typography variant="subtitle1">Tổng tiền: {total.toLocaleString()} VND</Typography>
 
       <Typography variant="h6" mt={4}>
         Sản phẩm đã đặt
@@ -61,6 +64,7 @@ export default function OrderDetailPage() {
           <TableHead>
             <TableRow>
               <TableCell>Tên sản phẩm</TableCell>
+              <TableCell>Giá</TableCell>
               <TableCell>Số lượng</TableCell>
             </TableRow>
           </TableHead>
@@ -68,6 +72,7 @@ export default function OrderDetailPage() {
             {details.map((item) => (
               <TableRow key={item._id}>
                 <TableCell>{item.productId?.name || "Không rõ"}</TableCell>
+                <TableCell>{item.productId?.price.toLocaleString() || "N/A"} VND</TableCell>
                 <TableCell>{item.quantity}</TableCell>
               </TableRow>
             ))}

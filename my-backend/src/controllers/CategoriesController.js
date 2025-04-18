@@ -153,12 +153,12 @@ class CategoriesController {
       const { id } = req.params;
 
       // Check if the category is referenced by any products
-      const productsUsingCategory = await Products.findOne({ category_id: id });
+      const productsUsingCategory = await Products.findOne({ category: id });
       if (productsUsingCategory) {
         return res.status(400).json({
           success: false,
           message:
-            "Cannot delete category because it is associated with one or more products",
+            "Không thể xóa do vẫn còn sản phẩm chứa category này",
         });
       }
 

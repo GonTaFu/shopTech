@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Box,
   Button,
@@ -25,6 +24,7 @@ import { styled } from "@mui/system";
 import { Edit, Trash2, Plus, Save, X } from "lucide-react";
 
 import API from "../utils/api";
+import { notifySuccess, notifyError, NotifyContainer } from "../utils/notify";
 
 // Styled Components (unchanged, included for completeness)
 const StyledContainer = styled(Container)(({ theme }) => ({
@@ -189,10 +189,10 @@ export default function CategoryManagement() {
         if (response.data.success) {
           setCategories(response.data.data);
         } else {
-          console.error("Failed to fetch categories:", response.data.message);
+          notifyError("Failed to fetch categories:", response.data.message);
         }
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        notifyError(error.response.data.message);
       }
     };
     fetchCategories();
@@ -215,12 +215,14 @@ export default function CategoryManagement() {
       const response = await API.delete(`/categories/${_id}`);
       if (response.data.success) {
         setCategories((prev) => prev.filter((cat) => cat._id !== _id));
+
+        notifySuccess("Đã xóa thành công");
       } else {
-        console.error("Failed to delete category:", response.data.message);
+        notifyError(response.data.message);
         alert(response.data.message);
       }
     } catch (error) {
-      console.error("Error deleting category:", error);
+      notifyError(`${error.response.data.message}`);
       alert("An error occurred while deleting the category.");
     }
   };
@@ -249,8 +251,10 @@ export default function CategoryManagement() {
               cat._id === currentCategory._id ? response.data.data : cat
             )
           );
+
+          notifySuccess("Đã cập nhập thành công");
         } else {
-          console.error("Failed to update category:", response.data.message);
+          notifyError(response.data.message);
           alert(response.data.message);
           return;
         }
@@ -261,14 +265,14 @@ export default function CategoryManagement() {
         if (response.data.success) {
           setCategories((prev) => [...prev, response.data.data]);
         } else {
-          console.error("Failed to create category:", response.data.message);
+          notifyError(response.data.message);
           alert(response.data.message);
           return;
         }
       }
       handleCloseDialog();
     } catch (error) {
-      console.error("Error saving category:", error);
+      notifyError(error.response.data.message);
       alert("An error occurred while saving the category.");
     }
   };
@@ -418,6 +422,7 @@ export default function CategoryManagement() {
           </SaveButton>
         </DialogActions>
       </StyledDialog>
+      <NotifyContainer/>
     </StyledContainer>
   );
 }

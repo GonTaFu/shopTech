@@ -22,6 +22,8 @@ import AssignmentSharpIcon from '@mui/icons-material/AssignmentSharp';
 import AccountCircleSharpIcon from '@mui/icons-material/AccountCircleSharp';
 import { Typography } from "@mui/material";
 
+import SearchBoxInput from "./SearchBoxInput";
+
 const StyledToolBar = styled(ToolBar)(({ theme }) => ({
   height: 60,
   display: 'flex',
@@ -87,6 +89,7 @@ export default function MyAppBar() {
   return (
     <AppBar
       position="fixed"
+      // position="static"
       enableColorOnDark
       sx={{
         boxShadow: 0,
@@ -95,7 +98,7 @@ export default function MyAppBar() {
         mt: 4
       }}
     >
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <StyledToolBar variant="dense" disableGutters>
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
@@ -106,6 +109,7 @@ export default function MyAppBar() {
               {/* <Button variant="text" color="info" sx={{ minWidth: 0 }}>FAQ</Button>
               <Button variant="text" color="info" sx={{ minWidth: 0 }}>Blog</Button> */}
             </Box>
+            <SearchBoxInput/>
           </Box>
 
           {/* Desktop */}
