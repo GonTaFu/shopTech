@@ -44,7 +44,7 @@ const MyFooter = () => {
         <Divider sx={{ my: 2, backgroundColor: "gray" }} />
 
         <Typography variant="body2" textAlign="center">
-          © {new Date().getFullYear()} MyWebsite. All rights reserved.
+          © {new Date().getFullYear()} Shop Tech. All rights reserved.
         </Typography>
       </Container>
     </Box>
