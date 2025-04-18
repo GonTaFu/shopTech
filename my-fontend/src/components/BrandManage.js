@@ -66,7 +66,7 @@ export default function BrandManagement() {
 
         {/* Form thêm brand */}
         <Grid container spacing={2} sx={{ mb: 3 }}>
-          <Grid item xs={10}>
+          <Grid sx={{ gridColumn: 'span 10' }}>
             <TextField
               fullWidth
               label="Tên nhãn hàng mới"
@@ -74,7 +74,7 @@ export default function BrandManagement() {
               onChange={(e) => setNewBrandName(e.target.value)}
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid sx={{ gridColumn: 'span 2' }}>
             <Button fullWidth variant="contained" onClick={handleAddBrand}>
               Thêm
             </Button>

@@ -138,7 +138,12 @@ const PayPage = () => {
             </Typography>
             <Grid container spacing={3}>
               {/* Form Nhập Thông Tin */}
-              <Grid item size={{ xs: 12, sm: 6 }}>
+              <Grid sx={{
+                gridColumn: {
+                  xs: 'span 12',
+                  sm: 'span 6'
+                },
+              }}>
                 <Paper elevation={3} sx={{ padding: 3, width: "100%" }}>
                   <Typography variant="h6" gutterBottom>
                     Nhập thông tin thẻ
@@ -176,19 +181,36 @@ const PayPage = () => {
               </Grid>
 
               {/* Form Nhập Số Thẻ */}
-              <Grid item size={{ xs: 12, sm: 6 }}>
+              <Grid sx={{
+                gridColumn: {
+                  xs: 'span 6',
+                  sm: 'span 4'
+                },
+              }}>
                 <Paper elevation={3} sx={{ padding: 3, width: "100%" }}>
                   <Typography variant="h6" gutterBottom>
                     Nhập số thẻ và mã Pin
                   </Typography>
                   <Grid container spacing={2}>
-                    <Grid item size={{ xs:12}}>
+                    <Grid sx={{
+                      gridColumn: {
+                        xs: 'span 12'
+                      },
+                    }}>
                       <TextField fullWidth label="Số thẻ" variant="outlined" />
                     </Grid>
-                    <Grid item size={{ xs:12}}>
+                    <Grid sx={{
+                      gridColumn: {
+                        xs: 'span 6'
+                      },
+                    }}>
                       <TextField fullWidth label="Mã Pin" variant="outlined" />
                     </Grid>
-                    <Grid item size={{ xs:12}}>
+                    <Grid sx={{
+                      gridColumn: {
+                        xs: 'span 6'
+                      },
+                    }}>
                       <Autocomplete
                         disablePortal
                         options={payment}
@@ -238,15 +260,15 @@ const PayPage = () => {
           </Container>
         </>
       )) || (
-        <Container maxWidth="md" sx={{ mt: 5, marginBottom: "100%" }}>
-          <Typography variant="h1" gutterBottom>
-            <center> Checkout </center>
-          </Typography>
-          <Typography variant="h3" gutterBottom>
-            <center> - Chưa có sản phẩm -</center>
-          </Typography>
-        </Container>
-      )}
+          <Container maxWidth="md" sx={{ mt: 5, marginBottom: "100%" }}>
+            <Typography variant="h1" gutterBottom>
+              <center> Checkout </center>
+            </Typography>
+            <Typography variant="h3" gutterBottom>
+              <center> - Chưa có sản phẩm -</center>
+            </Typography>
+          </Container>
+        )}
       <NotifyContainer />
     </>
   );

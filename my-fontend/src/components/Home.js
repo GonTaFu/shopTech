@@ -151,7 +151,13 @@ export default function Home() {
         </Typography>
         <Grid container spacing={2}>
           {brands.map((brand, index) => (
-            <Grid item xs={6} sm={4} md={2} key={brand._id || brand.name || index}>
+            <Grid sx={{
+              gridColumn: {
+                xs: 'span 6',
+                sm: 'span 4',
+                md: 'span 2',
+              },
+            }} key={brand._id || brand.name || index}>
               <StyledPaper elevation={3}>
                 <Typography
                   variant="subtitle1"
@@ -239,7 +245,13 @@ export default function Home() {
         </Grid> */}
         <Grid container spacing={4}>
           {products.slice(0, 4).map((product) => (
-            <Grid item size={{ xs: 12, sm: 6, md:4 }} key={product._id}>
+            <Grid sx={{
+              gridColumn: {
+                xs: 'span 12',
+                sm: 'span 6',
+                md: 'span 4',
+              },
+            }} key={product._id}>
               <StyledCard>
                 {/* <CardMedia
                   component="img"

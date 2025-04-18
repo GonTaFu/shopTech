@@ -93,7 +93,7 @@ const ProductList = () => {
       </Typography>
       <Grid container spacing={2}>
         {products.map((product) => (
-          <Grid item key={product._id} size={{xs:12, sm:6, md:4, lg:3, xl:2}}>
+          <Grid sx={{ gridColumn: 'span 12' }} key={product._id} size={{xs:12, sm:6, md:4, lg:3, xl:2}}>
             <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
               <CardMedia
                 component="img"

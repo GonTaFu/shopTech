@@ -66,7 +66,7 @@ export default function RegisterPage() {
         </Typography>
         <Divider sx={{ mb: 3 }} />
         <Grid container spacing={2} direction='column'>
-          <Grid item>
+          <Grid sx={{ gridColumn: 'span 12' }}>
             <TextField
               name='name'
               label='Họ và tên'
@@ -76,7 +76,7 @@ export default function RegisterPage() {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item>
+          <Grid sx={{ gridColumn: 'span 12' }}>
             <TextField
               name='email'
               label='Email'
@@ -86,7 +86,7 @@ export default function RegisterPage() {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item>
+          <Grid sx={{ gridColumn: 'span 12' }}>
             <TextField
               name='password'
               label='Mật khẩu'
@@ -97,7 +97,7 @@ export default function RegisterPage() {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item>
+          <Grid sx={{ gridColumn: 'span 12' }}>
             <TextField
               name='confirmPassword'
               label='Xác nhận mật khẩu'
@@ -109,21 +109,21 @@ export default function RegisterPage() {
             />
           </Grid>
           {error && (
-            <Grid item>
+            <Grid sx={{ gridColumn: 'span 12' }}>
               <Typography color='error'>{error}</Typography>
             </Grid>
           )}
-          <Grid item>
+          <Grid sx={{ gridColumn: 'span 12' }}>
             <Button variant='contained' color='primary' fullWidth onClick={handleRegister}>
               Đăng ký
             </Button>
           </Grid>
-          <Grid item>
+          <Grid sx={{ gridColumn: 'span 12' }}>
             <Typography variant='body2' color='primary'>
               Đã có tài khoản?
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid sx={{ gridColumn: 'span 12' }}>
             <Button variant='outlined' color='secondary' fullWidth onClick={() => router.push('/account')}>
               Đăng nhập
             </Button>

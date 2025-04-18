@@ -149,7 +149,7 @@ export default function ShowroomPage() {
         </Typography>
         <Grid container spacing={4} justifyContent="center">
           {showrooms.map((showroom) => (
-            <Grid item key={showroom.id} size={{ xs: 12, sm: 6, md: 4 }}>
+            <Grid sx={{ gridColumn: 'span 12' }} key={showroom.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <StyledCard>
                 <CardContent>
                   <Typography

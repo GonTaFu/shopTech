@@ -68,7 +68,7 @@ const Cart = () => {
             Giỏ Hàng
           </Typography>
           <Grid container spacing={3}>
-            <Grid item xs={4}>
+            <Grid sx={{ gridColumn: 'span 4' }}>
               <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 3 }}>
                 <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
                   <center>Đơn hàng</center>
@@ -107,7 +107,7 @@ const Cart = () => {
           Giỏ Hàng
         </Typography>
         <Grid container spacing={3}>
-          <Grid item xs={8}>
+          <Grid sx={{ gridColumn: 'span 8' }}>
             {products.map((item) => (
               <Paper
                 key={item._id}
@@ -146,7 +146,7 @@ const Cart = () => {
               </Paper>
             ))}
           </Grid>
-          <Grid item xs={4}>
+          <Grid sx={{ gridColumn: 'span 4' }}>
             <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 3 }}>
               <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
               <center>Đơn hàng</center>

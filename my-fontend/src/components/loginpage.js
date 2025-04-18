@@ -71,7 +71,7 @@ export default function LoginPage() {
         <Divider sx={{ mb: 3 }} />
 
         <Grid container spacing={2} direction="column">
-          <Grid item>
+          <Grid sx={{ gridColumn: 'span 12' }}>
             <TextField
               label="Email"
               value={email}
@@ -79,7 +79,7 @@ export default function LoginPage() {
               fullWidth
             />
           </Grid>
-          <Grid item>
+          <Grid sx={{ gridColumn: 'span 12' }}>
             <TextField
               label="Mật khẩu"
               type="password"
@@ -89,11 +89,11 @@ export default function LoginPage() {
             />
           </Grid>
           {error && (
-            <Grid item>
+            <Grid sx={{ gridColumn: 'span 12' }}>
               <Typography color="error">{error}</Typography>
             </Grid>
           )}
-          <Grid item>
+          <Grid sx={{ gridColumn: 'span 12' }}>
             <Button
               variant="contained"
               color="primary"
@@ -103,7 +103,7 @@ export default function LoginPage() {
               Đăng nhập
             </Button>
           </Grid>
-          <Grid item>
+          <Grid sx={{ gridColumn: 'span 12' }}>
             <Button
               variant="outlined"
               color="secondary"
