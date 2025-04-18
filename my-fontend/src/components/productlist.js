@@ -16,13 +16,13 @@ import { useEffect, useState } from "react";
 
 import API from "../utils/api";
 import { addToCart } from "../utils/cart";
-import {notifySuccess, notifyError, NotifyContainer} from "../utils/notify"
+import { notifySuccess, notifyError, NotifyContainer } from "../utils/notify";
 
 const BootstrapButton = styled(Button)({
   boxShadow: "none",
   textTransform: "none",
-  fontSize: 16,
-  padding: "6px 12px",
+  fontSize: 14, // Reduced font size for smaller buttons
+  padding: "5px 10px", // Smaller padding
   border: "1px solid",
   lineHeight: 1.5,
   backgroundColor: "#0063cc",
@@ -57,6 +57,8 @@ const BootstrapButton = styled(Button)({
 const ColorButton = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText(purple[500]),
   backgroundColor: purple[500],
+  fontSize: 14, // Reduced font size
+  padding: "5px 10px", // Smaller padding
   "&:hover": {
     backgroundColor: purple[700],
   },
@@ -86,62 +88,90 @@ const ProductList = () => {
   }, []);
 
   return (
-    <Container sx={{ mt: 5, px: { xs: 1, sm: 2, md: 3 }, width: "100%" }}>
-      <NotifyContainer/>
-      <Typography variant="h4" sx={{ fontWeight: "bold", mb: 3 }}>
+    <Container sx={{ mt: 4, px: { xs: 1, sm: 2, md: 3 }, width: "100%" }}>
+      <NotifyContainer />
+      <Typography variant="h4" sx={{ fontWeight: "bold", mb: 2 }}>
         Danh Sách Sản Phẩm
       </Typography>
       <Grid container spacing={2}>
         {products.map((product) => (
-          <Grid sx={{ gridColumn: 'span 12' }} key={product._id} size={{xs:12, sm:6, md:4, lg:3, xl:2}}>
-            <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
+          <Grid
+            item
+            key={product._id}
+            xs={12}
+            sm={6}
+            md={3} // 4 items per row (12 / 3 = 4)
+          >
+            <Card
+              sx={{
+                boxShadow: 3,
+                borderRadius: 2,
+                height: "100%", // Ensure cards stretch to fill grid item
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
               <CardMedia
                 component="img"
-                height="194"
-                image={product.images?.[0] || "images/default.jpg"}
-                alt="Đồ công nghệ gì đó"
+                sx={{
+                  height: 150, // Smaller fixed height for images
+                  objectFit: "cover", // Ensures images scale uniformly
+                  width: "100%", // Full card width
+                }}
+                image={product.images?.[0] || "/images/default.jpg"}
+                alt={product.name || "Đồ công nghệ gì đó"}
               />
-
-              <CardContent>
-                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                  {product.name}
-                </Typography>
-                <Typography
-                  color="error"
-                  sx={{
-                    marginTop: 1,
-                    marginBottom: 1,
-                    fontSize: 16,
-                    fontWeight: "bold",
-                  }}
-                >
-                  {product.price.toLocaleString()} VND
-                </Typography>
-
-                <Stack spacing={2} direction="row">
+              <CardContent
+                sx={{
+                  flexGrow: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  p: 1.5, // Reduced padding for compact look
+                }}
+              >
+                <div>
+                  <Typography
+                    variant="body1" // Smaller than h6
+                    sx={{
+                      fontWeight: "bold",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {product.name}
+                  </Typography>
+                  <Typography
+                    color="error"
+                    sx={{
+                      mt: 0.5,
+                      mb: 1,
+                      fontSize: 14, // Smaller font size
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {product.price ? product.price.toLocaleString("vi-VN") : "Liên hệ"} VND
+                  </Typography>
+                </div>
+                <Stack spacing={1} direction="row">
                   <ColorButton
                     href={`/products/${product._id}`}
                     variant="contained"
                   >
                     Xem chi tiết
                   </ColorButton>
-
-                  {product.quantity > 0 && (
-                    <BootstrapButton 
-                    variant="contained" 
-                    disableRipple
-                    onClick={() => {
-                      handleAddToCart(product._id)
-                    }}
+                  {product.quantity > 0 ? (
+                    <BootstrapButton
+                      variant="contained"
+                      disableRipple
+                      onClick={() => handleAddToCart(product._id)}
                     >
-                      Thêm vào giỏ hàng
+                      Thêm vào giỏ
                     </BootstrapButton>
-                  ) || (
-                    <Button  
-                    variant="contained" 
-                    disabled
-                    >
-                      Sản phẩm đã hết
+                  ) : (
+                    <Button variant="contained" disabled>
+                      Hết hàng
                     </Button>
                   )}
                 </Stack>
