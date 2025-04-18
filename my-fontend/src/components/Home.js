@@ -187,7 +187,7 @@ export default function Home() {
         </Typography>
         {/* <Grid container spacing={4}>
           {products.slice(0, 4).map((product) => (
-            <Grid item xs={12} sm={6} md={4} key={product.id}>
+            <Grid item size={{ xs: 12, sm: 6, md: 4 }} key={product.id}>
               <StyledCard>
                 <CardMedia
                   component="img"
@@ -239,7 +239,7 @@ export default function Home() {
         </Grid> */}
         <Grid container spacing={4}>
           {products.slice(0, 4).map((product) => (
-            <Grid item xs={12} sm={6} md={4} key={product._id}>
+            <Grid item size={{ xs: 12, sm: 6, md:4 }} key={product._id}>
               <StyledCard>
                 {/* <CardMedia
                   component="img"

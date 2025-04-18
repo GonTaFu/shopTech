@@ -138,7 +138,7 @@ const PayPage = () => {
             </Typography>
             <Grid container spacing={3}>
               {/* Form Nhập Thông Tin */}
-              <Grid item xs={12} sm={6}>
+              <Grid item size={{ xs: 12, sm: 6 }}>
                 <Paper elevation={3} sx={{ padding: 3, width: "100%" }}>
                   <Typography variant="h6" gutterBottom>
                     Nhập thông tin thẻ
@@ -176,19 +176,19 @@ const PayPage = () => {
               </Grid>
 
               {/* Form Nhập Số Thẻ */}
-              <Grid item xs={12} sm={6}>
+              <Grid item size={{ xs: 12, sm: 6 }}>
                 <Paper elevation={3} sx={{ padding: 3, width: "100%" }}>
                   <Typography variant="h6" gutterBottom>
                     Nhập số thẻ và mã Pin
                   </Typography>
                   <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid item size={{ xs:12}}>
                       <TextField fullWidth label="Số thẻ" variant="outlined" />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item size={{ xs:12}}>
                       <TextField fullWidth label="Mã Pin" variant="outlined" />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item size={{ xs:12}}>
                       <Autocomplete
                         disablePortal
                         options={payment}
