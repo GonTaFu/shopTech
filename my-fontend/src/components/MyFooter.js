@@ -25,7 +25,7 @@ const MyFooter = () => {
           }}
         >
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            MyWebsite
+            ShopTech
           </Typography>
 
           <Box sx={{ display: "flex", gap: 2, mt: { xs: 2, sm: 0 } }}>
